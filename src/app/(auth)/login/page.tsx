@@ -1,12 +1,10 @@
 import { redirect } from 'next/navigation';
-import { getServerSession } from 'next-auth';
-
-import { authOptions } from '@/lib/auth';
 
 import LoginCard from './components/login-card';
+import getSession from '@/actions/getSession';
 
 export default async function Home() {
-  const session = await getServerSession(authOptions);
+  const session = await getSession();
 
   if (session && session?.user?.isAuthenticated) {
     redirect('/');
