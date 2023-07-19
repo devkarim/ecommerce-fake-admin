@@ -9,7 +9,7 @@ const Navbar: React.FC<NavbarProps> = async ({}) => {
   const user = await getCurrentUser();
 
   return (
-    <div className="border-b">
+    <div className="border-b border-neutral">
       <div className="flex h-16 items-center px-4 space-x-4">
         <ShopDropdown shops={user?.shops || []} />
         <NavLinks />

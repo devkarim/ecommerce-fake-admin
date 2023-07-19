@@ -14,7 +14,7 @@ const ShopDropdown: React.FC<ShopDropdownProps> = ({ shops }) => {
     <div className="dropdown cursor-pointer">
       <div
         tabIndex={0}
-        className="flex items-center border-2 space-x-8 rounded-lg p-2 text-sm"
+        className="flex items-center border-neutral border-2 space-x-8 rounded-lg p-2 text-sm"
       >
         <div className="flex items-center space-x-2 text-sm">
           <MdStore className={cls('text-xl opacity-100')} />
