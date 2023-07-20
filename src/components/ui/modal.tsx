@@ -25,10 +25,10 @@ const Modal: React.FC<ModalProps> = ({
 
   return (
     <div className="absolute flex w-full h-full justify-center items-center bg-base-100/60 backdrop-blur-sm z-[50]">
-      <div className="card w-full max-w-xl bg-base-100 shadow-xl p-4">
+      <div className="card w-full max-w-xl bg-base-100 shadow-xl p-2">
         <div className="card-body space-y-8">
           <div className="space-y-2">
-            <h2 className="card-title text-2xl lg:text-3xl">{title}</h2>
+            <h2 className="card-title text-xl lg:text-2xl">{title}</h2>
             {subtitle && (
               <p className="text-sm text-base-content/50">{subtitle}</p>
             )}
@@ -46,6 +46,7 @@ const Modal: React.FC<ModalProps> = ({
             {primaryActionLabel && (
               <button
                 className="btn btn-primary px-12 text-base font-normal"
+                type="submit"
                 onClick={onPrimaryAction}
               >
                 {primaryActionLabel}
