@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 
 import prisma from '@/lib/prisma';
 import getSession from '@/actions/getSession';
-import Navbar from '@/components/navbar';
+import Navbar from '@/components/navbar/main-navbar';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
