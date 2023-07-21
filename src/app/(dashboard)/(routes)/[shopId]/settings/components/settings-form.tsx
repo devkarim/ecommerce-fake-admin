@@ -23,7 +23,6 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ id, name }) => {
   const {
     handleSubmit,
     register,
-    reset,
     formState: { errors },
   } = useForm<UpdateShopSchema>({
     resolver: zodResolver(updateShopSchema),
@@ -55,7 +54,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ id, name }) => {
     <form className="pt-4" onSubmit={handleSubmit(onChange)}>
       <div className="form-control max-w-md">
         <label className="label">
-          <span className="font-semibold">Name</span>
+          <span className="text-sm sm:text-base font-semibold">Name</span>
         </label>
         <div className="flex space-x-4">
           <input
@@ -68,7 +67,10 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ id, name }) => {
             disabled={loading}
             {...register('name')}
           />
-          <button disabled={loading} className="btn btn-primary w-32 text-base">
+          <button
+            disabled={loading}
+            className="btn btn-primary w-24 sm:w-32 text-sm sm:text-base"
+          >
             Rename
           </button>
         </div>

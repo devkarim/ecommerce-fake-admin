@@ -36,7 +36,7 @@ const DangerZone: React.FC<DangerZoneProps> = ({ id }) => {
 
   return (
     <Container className="border-b border-neutral space-y-6">
-      <h3 className="text-2xl lg:text-3xl text-error font-medium">
+      <h3 className="text-xl lg:text-3xl text-error font-medium">
         Danger Zone
       </h3>
       <div className="space-y-1">
@@ -46,7 +46,10 @@ const DangerZone: React.FC<DangerZoneProps> = ({ id }) => {
           products, properties, and orders.
         </p>
       </div>
-      <button className="btn btn-outline btn-lg btn-error" onClick={onDelete}>
+      <button
+        className="btn btn-outline btn-md lg:btn-lg btn-error"
+        onClick={onDelete}
+      >
         Delete this shop
       </button>
     </Container>

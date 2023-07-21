@@ -48,7 +48,7 @@ const ShopDropdown: React.FC<ShopDropdownProps> = ({
       <ul
         tabIndex={0}
         className={cls(
-          'dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-lg space-y-2',
+          'dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-lg space-y-2 w-full',
           { 'text-base': variant == 'lg' }
         )}
       >
