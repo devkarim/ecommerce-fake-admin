@@ -7,9 +7,10 @@ import { cls } from '@/lib/utils';
 
 interface NavLinksProps {
   className?: string;
+  onClick?: () => void;
 }
 
-const NavLinks: React.FC<NavLinksProps> = ({ className }) => {
+const NavLinks: React.FC<NavLinksProps> = ({ className, onClick }) => {
   const pathname = usePathname();
   const params = useParams();
 
@@ -46,6 +47,7 @@ const NavLinks: React.FC<NavLinksProps> = ({ className }) => {
       {routes.map((r) => (
         <Link
           key={r.href}
+          onClick={onClick}
           href={r.href}
           className={cls('opacity-60', {
             'opacity-100': r.active,

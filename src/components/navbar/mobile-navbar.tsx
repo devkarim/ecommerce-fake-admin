@@ -17,7 +17,10 @@ const MobileMenu: React.FC<MobileMenuProps> = ({}) => {
       />
       {isMenuOpen && (
         <div className="fixed flex h-full w-full bg-base-100 z-[50] left-0 top-16 border-t border-neutral p-6 lg:hidden">
-          <NavLinks className="flex flex-col space-y-4" />
+          <NavLinks
+            className="flex flex-col space-y-4"
+            onClick={() => setTimeout(() => setMenuOpen(false), 500)}
+          />
         </div>
       )}
     </div>
