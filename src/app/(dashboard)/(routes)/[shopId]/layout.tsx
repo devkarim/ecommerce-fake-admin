@@ -30,9 +30,9 @@ export default async function DashboardLayout({
     },
   });
 
-  // if (!shop) {
-  //   redirect(`/`);
-  // }
+  if (!shop) {
+    redirect(`/`);
+  }
 
   return (
     <>

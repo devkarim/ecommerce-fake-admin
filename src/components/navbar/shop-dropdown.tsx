@@ -43,16 +43,16 @@ const ShopDropdown: React.FC<ShopDropdownProps> = ({
       <ul
         tabIndex={0}
         className={cls(
-          'dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-lg w-full',
+          'dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-lg w-full space-y-2',
           { 'text-base': variant == 'lg' }
         )}
       >
         {shops.map((s) => (
           <li key={s.id}>
-            <a>{s.name}</a>
+            <Link href={`/${s.id}`}>{s.name}</Link>
           </li>
         ))}
-        <li className={cls({ 'border-t': shops.length !== 0 })}>
+        <li className={cls({ 'pt-2 border-t': shops.length !== 0 })}>
           <a onClick={shopModal.onOpen}>
             <FaPlusCircle /> Create a new shop
           </a>

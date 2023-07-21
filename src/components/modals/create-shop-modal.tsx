@@ -1,6 +1,10 @@
 'use client';
 
+import { useState } from 'react';
+import { AxiosError } from 'axios';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import Modal from '@/components/ui/modal';
@@ -9,11 +13,15 @@ import { cls } from '@/lib/utils';
 import createShopSchema, {
   CreateShopFormSchema,
 } from '@/schemas/createShopSchema';
+import { createShop } from '@/services/shops';
 
 interface CreateShopModalProps {}
 
 const CreateShopModal: React.FC<CreateShopModalProps> = ({}) => {
+  const router = useRouter();
   const shopModal = useShopModal();
+
+  const [loading, setLoading] = useState(false);
 
   const {
     handleSubmit,
@@ -29,7 +37,23 @@ const CreateShopModal: React.FC<CreateShopModalProps> = ({}) => {
   });
 
   const onCreate = async (values: CreateShopFormSchema) => {
-    console.log(values);
+    setLoading(true);
+    const { name } = values;
+    try {
+      const {
+        data: { shop },
+      } = await createShop(name);
+      router.push(`/${shop.id}`);
+      onClose();
+    } catch (err) {
+      if (err instanceof AxiosError && err.response?.data.message) {
+        toast.error(err.response?.data.message);
+      } else {
+        toast.error('Unable to create a new shop');
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const onClose = () => {
@@ -46,6 +70,7 @@ const CreateShopModal: React.FC<CreateShopModalProps> = ({}) => {
       onPrimaryAction={handleSubmit(onCreate)}
       secondaryActionLabel="Close"
       onSecondaryAction={onClose}
+      disabled={loading}
     >
       <form className="pt-4">
         <div className="form-control w-full">
@@ -59,6 +84,7 @@ const CreateShopModal: React.FC<CreateShopModalProps> = ({}) => {
             className={cls('input input-bordered w-full', {
               'input-error': !!errors.name,
             })}
+            disabled={loading}
             {...register('name')}
           />
           {errors.name && (

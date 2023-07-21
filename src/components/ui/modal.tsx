@@ -9,6 +9,7 @@ interface ModalProps {
   secondaryActionLabel?: string;
   onPrimaryAction?: () => void;
   onSecondaryAction?: () => void;
+  disabled?: boolean;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -20,6 +21,7 @@ const Modal: React.FC<ModalProps> = ({
   secondaryActionLabel,
   onPrimaryAction,
   onSecondaryAction,
+  disabled = false,
 }) => {
   if (!isOpen) return null;
 
@@ -39,6 +41,7 @@ const Modal: React.FC<ModalProps> = ({
               <button
                 className="btn btn-outline text-base font-normal"
                 onClick={onSecondaryAction}
+                disabled={disabled}
               >
                 {secondaryActionLabel}
               </button>
@@ -48,6 +51,7 @@ const Modal: React.FC<ModalProps> = ({
                 className="btn btn-primary sm:px-12 text-base font-normal"
                 type="submit"
                 onClick={onPrimaryAction}
+                disabled={disabled}
               >
                 {primaryActionLabel}
               </button>

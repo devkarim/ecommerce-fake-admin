@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import prisma from '@/lib/prisma';
 import getSession from '@/actions/getSession';
 import CreateShopModal from '@/components/modals/create-shop-modal';
+import Navbar from '@/components/navbar/main-navbar';
 
 export default async function DashboardLayout({
   children,
@@ -13,16 +14,6 @@ export default async function DashboardLayout({
 
   if (!session || !session.user || !session.user.isAuthenticated) {
     redirect('/login');
-  }
-
-  const shop = await prisma.shop.findFirst({
-    where: {
-      userId: session.user.id,
-    },
-  });
-
-  if (shop) {
-    redirect(`/${shop.id}`);
   }
 
   return (
