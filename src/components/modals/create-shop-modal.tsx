@@ -23,7 +23,6 @@ const CreateShopModal: React.FC<CreateShopModalProps> = ({}) => {
   const {
     handleSubmit,
     register,
-    clearErrors,
     reset,
     formState: { errors },
   } = useForm<CreateShopFormSchema>({

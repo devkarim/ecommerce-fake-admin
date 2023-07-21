@@ -26,11 +26,11 @@ const ShopDropdown: React.FC<ShopDropdownProps> = ({
       <div
         tabIndex={0}
         className={cls(
-          'flex items-center border-neutral border-2 space-x-8 rounded-lg p-2 text-sm',
+          'flex items-center border-neutral space-x-8 border-2 rounded-lg p-2 text-sm',
           { 'text-lg p-4': variant == 'lg' }
         )}
       >
-        <div className="flex items-center space-x-2">
+        <div className="flex whitespace-nowrap items-center space-x-2">
           <MdStore
             className={cls('text-xl opacity-100', {
               'text-2xl': variant == 'lg',

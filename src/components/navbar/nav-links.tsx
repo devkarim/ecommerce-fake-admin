@@ -5,9 +5,11 @@ import { useParams, usePathname } from 'next/navigation';
 
 import { cls } from '@/lib/utils';
 
-interface NavLinksProps {}
+interface NavLinksProps {
+  className?: string;
+}
 
-const NavLinks: React.FC<NavLinksProps> = ({}) => {
+const NavLinks: React.FC<NavLinksProps> = ({ className }) => {
   const pathname = usePathname();
   const params = useParams();
 
@@ -40,7 +42,7 @@ const NavLinks: React.FC<NavLinksProps> = ({}) => {
   ];
 
   return (
-    <div className="space-x-4">
+    <div className={className}>
       {routes.map((r) => (
         <Link
           key={r.href}
