@@ -1,11 +1,13 @@
-interface ShopPageProps {
+interface ShopOverviewPageProps {
   params: {
     shopId: string;
   };
 }
 
-const ShopPage: React.FC<ShopPageProps> = ({ params: { shopId } }) => {
-  return <div>Shop Page {shopId}</div>;
+const ShopOverviewPage: React.FC<ShopOverviewPageProps> = ({
+  params: { shopId },
+}) => {
+  return <div>Overview Page {shopId}</div>;
 };
 
-export default ShopPage;
+export default ShopOverviewPage;

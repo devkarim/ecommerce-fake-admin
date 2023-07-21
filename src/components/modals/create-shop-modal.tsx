@@ -10,9 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Modal from '@/components/ui/modal';
 import useShopModal from '@/hooks/useShopModal';
 import { cls } from '@/lib/utils';
-import createShopSchema, {
-  CreateShopFormSchema,
-} from '@/schemas/createShopSchema';
+import { createShopSchema, CreateShopSchema } from '@/schemas/shopSchema';
 import { createShop } from '@/services/shops';
 
 interface CreateShopModalProps {}
@@ -28,7 +26,7 @@ const CreateShopModal: React.FC<CreateShopModalProps> = ({}) => {
     register,
     reset,
     formState: { errors },
-  } = useForm<CreateShopFormSchema>({
+  } = useForm<CreateShopSchema>({
     resolver: zodResolver(createShopSchema),
     defaultValues: {
       name: '',
@@ -36,7 +34,7 @@ const CreateShopModal: React.FC<CreateShopModalProps> = ({}) => {
     reValidateMode: 'onSubmit',
   });
 
-  const onCreate = async (values: CreateShopFormSchema) => {
+  const onCreate = async (values: CreateShopSchema) => {
     setLoading(true);
     const { name } = values;
     try {

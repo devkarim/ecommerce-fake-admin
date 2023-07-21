@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 import getSession from '@/actions/getSession';
 import prisma from '@/lib/prisma';
-import createShopSchema from '@/schemas/createShopSchema';
+import { createShopSchema } from '@/schemas/shopSchema';
 
 export async function POST(req: Request) {
   try {
@@ -35,6 +35,7 @@ export async function POST(req: Request) {
       },
     });
 
+    // If user has same shop name
     if (existingShop) {
       return NextResponse.json(
         {
@@ -57,6 +58,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ success: true, shop });
   } catch (error) {
     console.log('[STORES_POST]', error);
-    return new NextResponse('Internal server error', { status: 500 });
+    return NextResponse.json(
+      { success: false, message: 'Internal server error' },
+      { status: 500 }
+    );
   }
 }
