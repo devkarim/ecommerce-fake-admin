@@ -4,13 +4,13 @@ import getShop from '@/actions/getShop';
 import Header from '@/components/ui/header';
 import Container from '@/components/ui/container';
 
-interface ShopPropertiesPageProps {
+interface ShopOrdersPageProps {
   params: {
     shopId: string;
   };
 }
 
-const ShopPropertiesPage: React.FC<ShopPropertiesPageProps> = async ({
+const ShopOrdersPage: React.FC<ShopOrdersPageProps> = async ({
   params: { shopId },
 }) => {
   const shop = await getShop(+shopId);
@@ -21,12 +21,12 @@ const ShopPropertiesPage: React.FC<ShopPropertiesPageProps> = async ({
     <div>
       <Container className="border-b border-neutral">
         <Header
-          title="Properties"
-          subtitle="Manage and add your shop properties"
+          title="Orders"
+          subtitle="Real-time order insights, analytics, and summaries"
         />
       </Container>
     </div>
   );
 };
 
-export default ShopPropertiesPage;
+export default ShopOrdersPage;
