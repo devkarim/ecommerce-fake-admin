@@ -1,21 +1,16 @@
 'use client';
 
-import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import Modal from '@/components/ui/modal';
 import useShopModal from '@/hooks/useShopModal';
 import { cls } from '@/lib/utils';
-import { useEffect } from 'react';
+import createShopSchema, {
+  CreateShopFormSchema,
+} from '@/schemas/createShopSchema';
 
 interface CreateShopModalProps {}
-
-const createShopFormSchema = z.object({
-  name: z.string().min(3, 'Shop name must be at least 3 characters long.'),
-});
-
-type CreateShopFormSchema = z.infer<typeof createShopFormSchema>;
 
 const CreateShopModal: React.FC<CreateShopModalProps> = ({}) => {
   const shopModal = useShopModal();
@@ -26,7 +21,7 @@ const CreateShopModal: React.FC<CreateShopModalProps> = ({}) => {
     reset,
     formState: { errors },
   } = useForm<CreateShopFormSchema>({
-    resolver: zodResolver(createShopFormSchema),
+    resolver: zodResolver(createShopSchema),
     defaultValues: {
       name: '',
     },
