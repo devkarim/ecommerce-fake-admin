@@ -25,27 +25,6 @@ const MobileMenu: React.FC<MobileMenuProps> = ({}) => {
       )}
     </div>
   );
-  // return (
-  //   <div className="dropdown dropdown-end">
-  //     <label tabIndex={0} className="btn btn-ghost btn-circle">
-  //       <MdMenu className="text-2xl cursor-pointer" />
-  //     </label>
-  //     <ul
-  //       tabIndex={0}
-  //       className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box"
-  //     >
-  //       <li>
-  //         <a>Homepage</a>
-  //       </li>
-  //       <li>
-  //         <a>Portfolio</a>
-  //       </li>
-  //       <li>
-  //         <a>About</a>
-  //       </li>
-  //     </ul>
-  //   </div>
-  // );
 };
 
 export default MobileMenu;
