@@ -7,6 +7,7 @@ import { FaArrowDown, FaPlusCircle } from 'react-icons/fa';
 import { Shop } from '@prisma/client';
 import { cls } from '@/lib/utils';
 import useShopModal from '@/hooks/useShopModal';
+import { useParams } from 'next/navigation';
 
 interface ShopDropdownProps {
   shops: Shop[];
@@ -20,6 +21,8 @@ const ShopDropdown: React.FC<ShopDropdownProps> = ({
   className,
 }) => {
   const shopModal = useShopModal();
+  const { shopId } = useParams();
+  const shop = shopId && shops.find((s) => s.id == +shopId);
 
   return (
     <div className={cls('dropdown cursor-pointer', className)}>
@@ -30,20 +33,22 @@ const ShopDropdown: React.FC<ShopDropdownProps> = ({
           { 'text-lg p-4': variant == 'lg' }
         )}
       >
-        <div className="flex whitespace-nowrap items-center space-x-2">
+        <div className="flex whitespace-nowrap items-center space-x-2 min-w-[150px]">
           <MdStore
             className={cls('text-xl opacity-100', {
               'text-2xl': variant == 'lg',
             })}
           />
-          <p className={cls('font-medium opacity-100')}>Choose your shop</p>
+          <p className={cls('font-medium opacity-100')}>
+            {shop ? shop.name : 'Choose your shop'}
+          </p>
         </div>
         <FaArrowDown className={cls('opacity-100')} />
       </div>
       <ul
         tabIndex={0}
         className={cls(
-          'dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-lg w-full space-y-2',
+          'dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-lg space-y-2',
           { 'text-base': variant == 'lg' }
         )}
       >
@@ -52,7 +57,11 @@ const ShopDropdown: React.FC<ShopDropdownProps> = ({
             <Link href={`/${s.id}`}>{s.name}</Link>
           </li>
         ))}
-        <li className={cls({ 'pt-2 border-t': shops.length !== 0 })}>
+        <li
+          className={cls({
+            'pt-2 border-t': shops.length !== 0,
+          })}
+        >
           <a onClick={shopModal.onOpen}>
             <FaPlusCircle /> Create a new shop
           </a>
