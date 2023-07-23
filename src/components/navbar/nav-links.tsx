@@ -23,17 +23,17 @@ const NavLinks: React.FC<NavLinksProps> = ({ className, onClick }) => {
     {
       href: `/${params.shopId}/products`,
       label: 'Products',
-      active: pathname === `/${params.shopId}/products`,
+      active: pathname.includes(`/${params.shopId}/products`),
     },
     {
       href: `/${params.shopId}/orders`,
       label: 'Orders',
-      active: pathname === `/${params.shopId}/orders`,
+      active: pathname.includes(`/${params.shopId}/orders`),
     },
     {
       href: `/${params.shopId}/properties`,
       label: 'Properties',
-      active: pathname === `/${params.shopId}/properties`,
+      active: pathname.includes(`/${params.shopId}/properties`),
     },
     {
       href: `/${params.shopId}/settings`,
