@@ -1,25 +1,20 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { FaEdit, FaEllipsisH, FaTrash } from 'react-icons/fa';
 
 import { cls } from '@/lib/utils';
 
-interface PropertyDropdownProps {
-  propertyId: number;
-  shopId: number;
+interface ActionsDropdownProps {
   onDelete: () => void;
+  onUpdate: () => void;
   disabled?: boolean;
 }
 
-const PropertyDropdown: React.FC<PropertyDropdownProps> = ({
-  shopId,
-  propertyId,
+const ActionsDropdown: React.FC<ActionsDropdownProps> = ({
   onDelete,
+  onUpdate,
   disabled,
 }) => {
-  const router = useRouter();
-
   return (
     <div className="dropdown dropdown-end">
       <label tabIndex={0} className="cursor-pointer">
@@ -33,7 +28,7 @@ const PropertyDropdown: React.FC<PropertyDropdownProps> = ({
           <button
             className={cls({ 'btn-disabled': disabled })}
             disabled={disabled}
-            onClick={() => router.push(`/${shopId}/properties/${propertyId}`)}
+            onClick={onUpdate}
           >
             <FaEdit /> Update
           </button>
@@ -54,4 +49,4 @@ const PropertyDropdown: React.FC<PropertyDropdownProps> = ({
   );
 };
 
-export default PropertyDropdown;
+export default ActionsDropdown;

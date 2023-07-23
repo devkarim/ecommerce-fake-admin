@@ -5,7 +5,7 @@ import Header from '@/components/ui/header';
 import Container from '@/components/ui/container';
 
 import PropertiesList from './components/properties-list';
-import AddProperty from './components/add-property';
+import AddNew from '@/components/ui/add-new';
 
 interface ShopPropertiesPageProps {
   params: {
@@ -28,7 +28,7 @@ const ShopPropertiesPage: React.FC<ShopPropertiesPageProps> = async ({
         <Header
           title="Properties"
           subtitle="Manage and add your shop properties"
-          right={<AddProperty />}
+          right={<AddNew href={`/${shop.id}/properties/new`} />}
         />
       </Container>
       <Container>

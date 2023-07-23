@@ -1,14 +1,14 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { Property } from '@prisma/client';
 
-import PropertyDropdown from './property-dropdown';
 import { deleteProperty } from '@/services/shops';
+import ActionsDropdown from '@/components/ui/update-dropdown';
 
 interface PropertiesListProps {
   props: Property[];
@@ -78,9 +78,10 @@ const PropertiesList: React.FC<PropertiesListProps> = ({ props }) => {
                 <td>{p.type}</td>
                 <td>{p.values.join(' | ')}</td>
                 <th>
-                  <PropertyDropdown
-                    shopId={p.shopId}
-                    propertyId={p.id}
+                  <ActionsDropdown
+                    onUpdate={() =>
+                      router.push(`/${p.shopId}/properties/${p.id}`)
+                    }
                     onDelete={() => onDelete(p.id, p.shopId)}
                     disabled={loading}
                   />
