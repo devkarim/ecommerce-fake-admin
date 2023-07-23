@@ -2,13 +2,13 @@
 
 import { useState } from 'react';
 import { AxiosError } from 'axios';
+import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 
 import { Property } from '@prisma/client';
 
 import PropertyDropdown from './property-dropdown';
 import { deleteProperty } from '@/services/shops';
-import toast from 'react-hot-toast';
 
 interface PropertiesListProps {
   props: Property[];
@@ -16,9 +16,21 @@ interface PropertiesListProps {
 
 const PropertiesList: React.FC<PropertiesListProps> = ({ props }) => {
   const [loading, setLoading] = useState(false);
+  const [filteredProps, setFilteredProps] = useState<Property[]>(props);
   const router = useRouter();
 
-  const onQueryChange = (query: string) => {};
+  const onQueryChange = (query: string) => {
+    if (query.trim().length == 0) return setFilteredProps(props);
+    const q = query.toLowerCase();
+    setFilteredProps(
+      props.filter((p) => {
+        if (p.name.toLowerCase().includes(q)) return true;
+        if (p.type.toLowerCase().includes(q)) return true;
+        if (p.values.join(' ').toLowerCase().includes(q)) return true;
+        return false;
+      })
+    );
+  };
 
   const onDelete = async (propertyId: number, shopId: number) => {
     setLoading(true);
@@ -46,7 +58,7 @@ const PropertiesList: React.FC<PropertiesListProps> = ({ props }) => {
         className="input input-bordered w-full max-w-sm"
         onChange={(e) => onQueryChange(e.target.value)}
       />
-      {props.length != 0 ? (
+      {filteredProps.length != 0 ? (
         <table className="overflow-x-auto table">
           {/* head */}
           <thead>
@@ -58,7 +70,7 @@ const PropertiesList: React.FC<PropertiesListProps> = ({ props }) => {
           </thead>
           {/* body */}
           <tbody>
-            {props.map((p) => (
+            {filteredProps.map((p) => (
               <tr key={p.id} className="border-[1px] border-neutral">
                 <td>{p.name}</td>
                 <td>{p.type}</td>
@@ -78,7 +90,8 @@ const PropertiesList: React.FC<PropertiesListProps> = ({ props }) => {
       ) : (
         <p className="text-center opacity-60 py-12">
           No properties found. <br />
-          Create one by using the {'"Add new"'} button above.
+          {props.length == 0 &&
+            'Create one by using the "Add new" button above.'}
         </p>
       )}
     </div>
