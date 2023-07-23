@@ -12,6 +12,7 @@ import {
   CreateProductSchema,
 } from '@/schemas/productSchema';
 import Input from '@/components/ui/input';
+import Checkbox from '@/components/ui/checkbox';
 
 interface ProductsFormProps {
   shopId: number;
@@ -39,12 +40,17 @@ const ProductsForm: React.FC<ProductsFormProps> = ({
     resolver: zodResolver(createProductSchema),
     defaultValues: {
       name,
+      isArchived: false,
+      isFeatured: false,
+      price: 0,
+      quantity: 0,
     },
     reValidateMode: 'onSubmit',
   });
 
   const onSubmit = async (formData: CreateProductSchema) => {
     setLoading(true);
+    console.log(formData);
     try {
       if (mode == 'Create') {
         toast.success('Product added successfully!');
@@ -83,6 +89,37 @@ const ProductsForm: React.FC<ProductsFormProps> = ({
             disabled={loading}
             error={errors.name?.message}
             {...register('name')}
+          />
+          <Input
+            id="price"
+            type="number"
+            step="0.001"
+            label="Price"
+            placeholder="Your product price here"
+            disabled={loading}
+            error={errors.price?.message}
+            {...register('price', { valueAsNumber: true })}
+          />
+          <Input
+            id="quantity"
+            type="number"
+            label="Quantity"
+            placeholder="Your product quantity here"
+            disabled={loading}
+            error={errors.quantity?.message}
+            {...register('quantity', { valueAsNumber: true })}
+          />
+        </div>
+        <div className="flex flex-col sm:flex-row gap-8">
+          <Checkbox
+            label="Featured"
+            description="This product will be shown to users on home page."
+            {...register('isArchived')}
+          />
+          <Checkbox
+            label="Archived"
+            description="This product will be hidden on the website."
+            {...register('isFeatured')}
           />
         </div>
       </div>
