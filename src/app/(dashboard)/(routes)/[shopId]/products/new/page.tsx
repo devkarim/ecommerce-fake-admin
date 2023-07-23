@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { getShopWithProps } from '@/actions/shops';
 import Header from '@/components/ui/header';
 import Container from '@/components/ui/container';
+import ProductsForm from '../components/products-form';
 
 interface AddNewProductPageProps {
   params: {
@@ -25,7 +26,9 @@ const AddNewProductPage: React.FC<AddNewProductPageProps> = async ({
           subtitle="Add a new product to your shop"
         />
       </Container>
-      <Container></Container>
+      <Container>
+        <ProductsForm shopId={shop.id} />
+      </Container>
     </>
   );
 };
