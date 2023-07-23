@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 
+import { PropertyType } from '@prisma/client';
+
 import getSession from '@/actions/getSession';
 import prisma from '@/lib/prisma';
 import { createPropertySchema } from '@/schemas/propertySchema';
@@ -12,15 +14,13 @@ export async function POST(
   try {
     const session = await getSession();
     const body = await req.json();
-
     const { name, type, values } = body;
-    const { shopId } = params;
-
+    const shopId = +params.shopId;
     if (!session || !session.user.isAuthenticated) {
       return new NextResponse('Unauthenticated', { status: 403 });
     }
-
-    if (!shopId || isNaN(+shopId)) {
+    // Check shop ID
+    if (!shopId || isNaN(shopId)) {
       return NextResponse.json(
         { success: false, message: 'Shop ID is required' },
         {
@@ -28,9 +28,9 @@ export async function POST(
         }
       );
     }
-
+    // Validate create schema
     const validation = createPropertySchema.safeParse({ name, type, values });
-
+    // If schema didn't pass validation
     if (!validation.success) {
       return NextResponse.json(
         { success: false, message: validation.error.errors[0].message },
@@ -39,13 +39,21 @@ export async function POST(
         }
       );
     }
-
-    const id = +shopId;
-
+    // Check values if type is FixedValues
+    if (
+      type == PropertyType.FixedValues &&
+      (!values || values.length == 0 || values[0].length == 0)
+    ) {
+      return NextResponse.json(
+        { success: false, message: 'At least one property must be added.' },
+        {
+          status: 400,
+        }
+      );
+    }
     const userId = session.user.id;
-
     // If shop not found or not owned by user
-    if (!isShopOwnedToUser(userId, id)) {
+    if (!isShopOwnedToUser(userId, shopId)) {
       return NextResponse.json(
         { success: false, message: 'Shop not found or not owned by user' },
         {
@@ -53,11 +61,10 @@ export async function POST(
         }
       );
     }
-
+    // Create new property
     const property = await prisma.property.create({
-      data: { name, type, shopId: id, values },
+      data: { name, type, shopId, values },
     });
-
     return NextResponse.json({ success: true, data: property });
   } catch (error) {
     console.log('[PROPERTIES_POST]', error);

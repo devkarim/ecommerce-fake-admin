@@ -1,6 +1,7 @@
 import { Property, PropertyType, Shop } from '@prisma/client';
 
 import { BaseResponse, BaseResponseNoData } from '@/types/api';
+
 import client from './client';
 
 export type ShopResponse = BaseResponse<Shop>;
@@ -38,4 +39,27 @@ export const createProperty = (
     type,
     values,
   });
+};
+
+export const editProperty = (
+  propertyId: number,
+  shopId: number,
+  name: string,
+  type: PropertyType,
+  values?: string[]
+) => {
+  return client.patch<PropertyResponse>(
+    `api/shops/${shopId}/properties/${propertyId}`,
+    {
+      name,
+      type,
+      values,
+    }
+  );
+};
+
+export const deleteProperty = (shopId: number, propertyId: number) => {
+  return client.delete<BaseResponseNoData>(
+    `api/shops/${shopId}/properties/${propertyId}`
+  );
 };

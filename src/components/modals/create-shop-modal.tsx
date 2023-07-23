@@ -38,10 +38,13 @@ const CreateShopModal: React.FC<CreateShopModalProps> = ({}) => {
     setLoading(true);
     const { name } = values;
     try {
-      const {
-        data: { shop },
-      } = await createShop(name);
-      router.push(`/${shop.id}`);
+      const { data: shop } = await createShop(name);
+      if (shop.success) {
+        router.refresh();
+        router.push(`/${shop.data.id}`);
+      } else {
+        toast.error(shop.message);
+      }
       onClose();
     } catch (err) {
       if (err instanceof AxiosError && err.response?.data.message) {
