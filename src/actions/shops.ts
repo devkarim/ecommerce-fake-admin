@@ -44,4 +44,20 @@ export const getShopWithProps = async (shopId: number) => {
   }
 };
 
+export const isShopOwnedToUser = async (userId: number, shopId: number) => {
+  const currentShop = await prisma.shop.findFirst({
+    where: {
+      id: shopId,
+      userId,
+    },
+  });
+
+  // If shop found and owned by user
+  if (currentShop) {
+    return true;
+  }
+
+  return false;
+};
+
 export default getShop;

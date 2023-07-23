@@ -35,7 +35,7 @@ const PropertiesList: React.FC<PropertiesListProps> = ({ props }) => {
               <tr key={p.id} className="border-[1px] border-neutral">
                 <td>{p.name}</td>
                 <td>{p.type}</td>
-                <td>{p.values.join(' ')}</td>
+                <td>{p.values.join(' | ')}</td>
                 <th>
                   <PropertyDropdown />
                 </th>

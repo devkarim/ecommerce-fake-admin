@@ -25,6 +25,8 @@ module.exports = {
           'base-100': '#EDEDED',
           'base-200': '#DCDCDC',
           'base-300': '#CBCBCB',
+          error: '#FF0000',
+          'error-content': '#ffffff',
         },
         dark: {
           ...require('daisyui/src/theming/themes')['[data-theme=dark]'],
@@ -35,6 +37,8 @@ module.exports = {
           'base-200': '#142125',
           'base-300': '#121F22',
           'base-content': '#DBDBDB',
+          error: '#FF0000',
+          'error-content': '#ffffff',
         },
       },
     ],

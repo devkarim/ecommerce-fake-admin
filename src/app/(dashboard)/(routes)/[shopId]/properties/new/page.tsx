@@ -27,7 +27,7 @@ const AddNewPropertyPage: React.FC<AddNewPropertyPageProps> = async ({
         />
       </Container>
       <Container>
-        <PropertiesForm />
+        <PropertiesForm shopId={shop.id} />
       </Container>
     </>
   );

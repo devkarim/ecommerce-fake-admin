@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import getSession from '@/actions/getSession';
 import prisma from '@/lib/prisma';
 import { updateShopSchema } from '@/schemas/shopSchema';
+import { isShopOwnedToUser } from '@/actions/shops';
 
 export async function PATCH(
   req: Request,
@@ -43,15 +44,8 @@ export async function PATCH(
 
     const userId = session.user.id;
 
-    const currentShop = await prisma.shop.findFirst({
-      where: {
-        id,
-        userId,
-      },
-    });
-
     // If shop not found or not owned by user
-    if (!currentShop) {
+    if (!isShopOwnedToUser(userId, id)) {
       return NextResponse.json(
         { success: false, message: 'Shop not found or not owned by user' },
         {
@@ -89,7 +83,7 @@ export async function PATCH(
       },
     });
 
-    return NextResponse.json({ success: true, shop });
+    return NextResponse.json({ success: true, data: shop });
   } catch (error) {
     console.log('[STORES_PATCH]', error);
     return NextResponse.json(

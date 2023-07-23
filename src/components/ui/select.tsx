@@ -17,7 +17,7 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
     ref
   ) => {
     return (
-      <div className={cls('min-w-[16rem]', parentClassName)}>
+      <div className="w-full max-w-sm">
         {label && (
           <label className="label">
             <span className="text-sm sm:text-base font-semibold">{label}</span>

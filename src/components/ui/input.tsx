@@ -7,35 +7,39 @@ import { cls } from '@/lib/utils';
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
+  bordered?: boolean;
   error?: string;
   right?: React.ReactNode;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, className, right, ...props }, ref) => {
+  ({ label, error, className, right, bordered = true, ...props }, ref) => {
     return (
-      <div>
+      <div className="w-full max-w-sm">
         {label && (
           <label className="label">
             <span className="text-sm sm:text-base font-semibold">{label}</span>
           </label>
         )}
-        <div className="relative w-fit">
+        <div className="relative w-full">
           <input
             className={cls(
-              'input input-bordered w-full',
+              'input w-full',
               {
                 'input-error': !!error,
+              },
+              {
+                'input-bordered': bordered,
               },
               className
             )}
             ref={ref}
             {...props}
           />
-          <span className="absolute right-4 top-3">{right}</span>
+          <span className="absolute right-5 top-3">{right}</span>
         </div>
         {error && (
-          <label className="label">
+          <label className="absolute label">
             <span className="label-text-alt text-error font-medium">
               {error}
             </span>

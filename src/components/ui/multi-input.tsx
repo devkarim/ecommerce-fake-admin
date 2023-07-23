@@ -1,7 +1,7 @@
 'use client';
 
 import { FaXmark } from 'react-icons/fa6';
-import { FaPlus } from 'react-icons/fa';
+import { FaPlus, FaTrash } from 'react-icons/fa';
 
 import Input, { InputProps } from './input';
 import { useEffect, useState } from 'react';
@@ -9,14 +9,18 @@ import { useEffect, useState } from 'react';
 interface MultiInputProps extends InputProps {
   label?: string;
   onValuesChange?: (values: string[]) => void;
+  defaultValues?: string[];
 }
 
 const MultiInput: React.FC<MultiInputProps> = ({
   label,
+  className,
+  disabled,
   onValuesChange,
+  defaultValues = [''],
   ...inputProps
 }) => {
-  const [values, setValues] = useState<string[]>(['']);
+  const [values, setValues] = useState<string[]>(defaultValues);
 
   const addValue = () => {
     setValues([...values, '']);
@@ -31,41 +35,64 @@ const MultiInput: React.FC<MultiInputProps> = ({
   };
 
   const removeValue = (i: number) => {
-    if (values.length <= 1) return;
+    if (values.length <= 1) return setValues(['']);
     setValues((prev) => prev.filter((_, index) => index != i));
+  };
+
+  const clearValues = () => {
+    setValues(['']);
   };
 
   useEffect(() => {
     onValuesChange && onValuesChange(values);
-  }, [onValuesChange, values]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [values]);
 
   return (
-    <div className="max-h-80 pl-1 overflow-y-auto">
-      <div>
+    <div>
+      <div className="max-h-80 overflow-y-auto">
         {label && (
           <label className="label">
             <span className="text-sm sm:text-base font-semibold">{label}</span>
           </label>
         )}
-        {values.map((v, index) => (
-          <Input
-            key={index}
-            className="w-fit mb-8"
-            onChange={(e) => updateValue(index, e.target.value)}
-            value={v}
-            right={
-              <FaXmark
-                className="cursor-pointer text-2xl"
-                onClick={() => removeValue(index)}
-              />
-            }
-            {...inputProps}
-          />
-        ))}
+        <div className="flex flex-wrap gap-8 sm:gap-12">
+          {values.map((v, index) => (
+            <Input
+              key={index}
+              onChange={(e) => updateValue(index, e.target.value)}
+              value={v}
+              disabled={disabled}
+              className="focus:-outline-offset-4"
+              right={
+                <FaXmark
+                  className="cursor-pointer text-2xl"
+                  onClick={() => removeValue(index)}
+                />
+              }
+              {...inputProps}
+            />
+          ))}
+        </div>
       </div>
-      <button className="btn btn-neutral" type="button" onClick={addValue}>
-        <FaPlus></FaPlus> Add new
-      </button>
+      <div className="space-x-4">
+        <button
+          className="mt-6 btn btn-neutral"
+          type="button"
+          disabled={disabled}
+          onClick={addValue}
+        >
+          <FaPlus /> Add new
+        </button>
+        <button
+          className="mt-6 btn btn-error"
+          type="button"
+          disabled={disabled}
+          onClick={clearValues}
+        >
+          <FaTrash /> Clear
+        </button>
+      </div>
     </div>
   );
 };

@@ -1,10 +1,18 @@
 'use client';
 
+import { useParams, useRouter } from 'next/navigation';
 import { FaEdit, FaEllipsisH, FaTrash } from 'react-icons/fa';
 
-interface PropertyDropdownProps {}
+interface PropertyDropdownProps {
+  propertyId: number;
+}
 
-const PropertyDropdown: React.FC<PropertyDropdownProps> = ({}) => {
+const PropertyDropdown: React.FC<PropertyDropdownProps> = ({ propertyId }) => {
+  const router = useRouter();
+  const { shopId } = useParams();
+
+  const onDelete = () => {};
+
   return (
     <div className="dropdown dropdown-end">
       <label tabIndex={0} className="cursor-pointer">
@@ -15,12 +23,16 @@ const PropertyDropdown: React.FC<PropertyDropdownProps> = ({}) => {
         className="dropdown-content z-[10] menu p-2 shadow bg-base-100 rounded-box w-40"
       >
         <li>
-          <a>
+          <a
+            onClick={() =>
+              router.push(`/${shopId}/properties/${propertyId}/update`)
+            }
+          >
             <FaEdit /> Update
           </a>
         </li>
         <li>
-          <a>
+          <a onClick={onDelete}>
             <FaTrash /> Delete
           </a>
         </li>
