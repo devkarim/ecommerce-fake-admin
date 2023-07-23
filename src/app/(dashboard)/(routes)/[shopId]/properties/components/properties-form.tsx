@@ -14,6 +14,9 @@ import {
 import Input from '@/components/ui/input';
 import Select from '@/components/ui/select';
 import MultiInput from '@/components/ui/multi-input';
+import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
+import { AxiosError } from 'axios';
 
 interface PropertiesFormProps {
   name?: string;
@@ -28,6 +31,9 @@ const PropertiesForm: React.FC<PropertiesFormProps> = ({
 }) => {
   const [currentType, setCurrentType] = useState<PropertyType>(type);
   const [loading, setLoading] = useState(false);
+  const [values, setValues] = useState<string[]>(['']);
+
+  const router = useRouter();
 
   const {
     handleSubmit,
@@ -42,8 +48,25 @@ const PropertiesForm: React.FC<PropertiesFormProps> = ({
     reValidateMode: 'onSubmit',
   });
 
-  const onSubmit = (values: CreatePropertySchema) => {
-    console.log(values);
+  const onSubmit = (formData: CreatePropertySchema) => {
+    const { name, type } = formData;
+    if (currentType == PropertyType.FixedValues && values[0].length < 3) {
+      toast.error('At least a property of 3 characters long must be added.');
+      return;
+    }
+    setLoading(true);
+    try {
+      router.refresh();
+      toast.success('Property added successfully!');
+    } catch (err) {
+      if (err instanceof AxiosError && err.response?.data.message) {
+        toast.error(err.response?.data.message);
+      } else {
+        toast.error('Unable to create property');
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -75,6 +98,7 @@ const PropertiesForm: React.FC<PropertiesFormProps> = ({
             label="Values"
             placeholder="Add value"
             disabled={loading}
+            onValuesChange={(values) => setValues(values)}
           />
         )}
       </div>
