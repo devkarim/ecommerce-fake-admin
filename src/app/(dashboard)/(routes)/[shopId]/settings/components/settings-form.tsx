@@ -32,7 +32,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ id, name }) => {
     reValidateMode: 'onSubmit',
   });
 
-  const onChange = async (values: UpdateShopSchema) => {
+  const onSubmit = async (values: UpdateShopSchema) => {
     setLoading(true);
     const { name } = values;
     try {
@@ -51,7 +51,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ id, name }) => {
   };
 
   return (
-    <form className="pt-4" onSubmit={handleSubmit(onChange)}>
+    <form className="pt-4" onSubmit={handleSubmit(onSubmit)}>
       <div className="form-control max-w-md">
         <label className="label">
           <span className="text-sm sm:text-base font-semibold">Name</span>
@@ -69,7 +69,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ id, name }) => {
           />
           <button
             disabled={loading}
-            className="btn btn-primary w-24 sm:w-32 text-sm sm:text-base"
+            className="btn btn-neutral w-24 sm:w-32 text-sm sm:text-base"
           >
             Rename
           </button>

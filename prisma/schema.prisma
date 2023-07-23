@@ -20,11 +20,13 @@ enum PropertyType {
 
 model Property {
   id        Int          @id @default(autoincrement())
+  name      String
   type      PropertyType
-  Shop      Shop?        @relation(fields: [shopId], references: [id])
-  shopId    Int?
+  Shop      Shop         @relation(fields: [shopId], references: [id])
+  shopId    Int
   Product   Product?     @relation(fields: [productId], references: [id])
   productId Int?
+  values    String[]
 }
 
 model User {

@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 
-import getShop from '@/actions/getShop';
+import getShop from '@/actions/shops';
 import Container from '@/components/ui/container';
 import Header from '@/components/ui/header';
 

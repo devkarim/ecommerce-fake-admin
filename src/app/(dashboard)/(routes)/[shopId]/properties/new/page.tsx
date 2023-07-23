@@ -3,17 +3,15 @@ import { redirect } from 'next/navigation';
 import { getShopWithProps } from '@/actions/shops';
 import Header from '@/components/ui/header';
 import Container from '@/components/ui/container';
+import PropertiesForm from '../components/properties-form';
 
-import PropertiesList from './components/properties-list';
-import AddProperty from './components/add-property';
-
-interface ShopPropertiesPageProps {
+interface AddNewPropertyPageProps {
   params: {
     shopId: string;
   };
 }
 
-const ShopPropertiesPage: React.FC<ShopPropertiesPageProps> = async ({
+const AddNewPropertyPage: React.FC<AddNewPropertyPageProps> = async ({
   params: { shopId },
 }) => {
   const shop = await getShopWithProps(+shopId);
@@ -24,16 +22,15 @@ const ShopPropertiesPage: React.FC<ShopPropertiesPageProps> = async ({
     <>
       <Container className="border-b border-neutral">
         <Header
-          title="Properties"
-          subtitle="Manage and add your shop properties"
-          right={<AddProperty />}
+          title="Create property"
+          subtitle="Add a new property to your shop"
         />
       </Container>
       <Container>
-        <PropertiesList props={shop.props} />
+        <PropertiesForm />
       </Container>
     </>
   );
 };
 
-export default ShopPropertiesPage;
+export default AddNewPropertyPage;
