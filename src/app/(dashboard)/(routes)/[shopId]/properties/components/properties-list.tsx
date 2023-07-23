@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
@@ -16,10 +16,11 @@ interface PropertiesListProps {
 
 const PropertiesList: React.FC<PropertiesListProps> = ({ props }) => {
   const [loading, setLoading] = useState(false);
+  const [query, setQuery] = useState('');
   const [filteredProps, setFilteredProps] = useState<Property[]>(props);
   const router = useRouter();
 
-  const onQueryChange = (query: string) => {
+  useEffect(() => {
     if (query.trim().length == 0) return setFilteredProps(props);
     const q = query.toLowerCase();
     setFilteredProps(
@@ -30,7 +31,7 @@ const PropertiesList: React.FC<PropertiesListProps> = ({ props }) => {
         return false;
       })
     );
-  };
+  }, [props, query]);
 
   const onDelete = async (propertyId: number, shopId: number) => {
     setLoading(true);
@@ -54,9 +55,10 @@ const PropertiesList: React.FC<PropertiesListProps> = ({ props }) => {
       <input
         id="query"
         type="text"
+        value={query}
         placeholder="Search"
         className="input input-bordered w-full max-w-sm"
-        onChange={(e) => onQueryChange(e.target.value)}
+        onChange={(e) => setQuery(e.target.value)}
       />
       {filteredProps.length != 0 ? (
         <table className="overflow-x-auto table">
