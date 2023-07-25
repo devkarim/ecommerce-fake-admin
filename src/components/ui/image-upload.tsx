@@ -43,9 +43,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       <CldUploadWidget
         options={{
           resourceType: 'image',
-          prepareUploadParams: () => {
-            return { resourceType: 'image' };
-          },
         }}
         onUpload={(s: any) => onUpload(s.info.secure_url)}
         uploadPreset="tkwks7ba"

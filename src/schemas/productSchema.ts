@@ -20,3 +20,14 @@ export const createProductSchema = z.object({
 });
 
 export type CreateProductSchema = z.infer<typeof createProductSchema>;
+
+export const addProductPropertySchema = z.object({
+  id: z.number({ required_error: 'Property id is required.' }),
+  name: z.string({ required_error: 'Property name is required.' }),
+  value: z
+    .string()
+    .min(1, 'Property value must be at least 1 characters long.')
+    .or(z.number()),
+});
+
+export type AddProductPropertySchema = z.infer<typeof addProductPropertySchema>;

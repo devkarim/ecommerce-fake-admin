@@ -1,5 +1,7 @@
 'use client';
 
+import { cls } from '@/lib/utils';
+
 interface ModalProps {
   title: string;
   subtitle?: string;
@@ -11,6 +13,8 @@ interface ModalProps {
   onSecondaryAction?: () => void;
   disabled?: boolean;
   onOuterClick?: () => void;
+  parentClassName?: string;
+  className?: string;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -24,12 +28,17 @@ const Modal: React.FC<ModalProps> = ({
   onSecondaryAction,
   disabled = false,
   onOuterClick,
+  parentClassName,
+  className,
 }) => {
   if (!isOpen) return null;
 
   return (
     <div
-      className="fixed top-0 left-0 flex w-full h-full justify-center items-center bg-base-100/60 p-4 backdrop-blur-sm z-[50] disable-scroll"
+      className={cls(
+        'fixed top-0 left-0 flex w-full h-full justify-center items-center bg-base-100/60 p-4 backdrop-blur-sm z-[50]',
+        parentClassName
+      )}
       onClick={(e) => {
         if (disabled) return;
         if (e.target == e.currentTarget) {
@@ -37,7 +46,12 @@ const Modal: React.FC<ModalProps> = ({
         }
       }}
     >
-      <div className="card w-full max-w-xl bg-base-200 shadow-xl p-2">
+      <div
+        className={cls(
+          'card w-full max-w-xl bg-base-200 shadow-xl p-2 disable-scroll',
+          className
+        )}
+      >
         <div className="card-body space-y-8">
           <div className="space-y-1">
             <h2 className="card-title text-xl lg:text-2xl">{title}</h2>

@@ -2,20 +2,26 @@
 
 import { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
+import { FaXmark } from 'react-icons/fa6';
+import { FaPlus } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
+import { Property, PropertyValues } from '@prisma/client';
+
 import {
+  AddProductPropertySchema,
   createProductSchema,
   CreateProductSchema,
 } from '@/schemas/productSchema';
 import Input from '@/components/ui/input';
 import Checkbox from '@/components/ui/checkbox';
 import ImageUpload from '@/components/ui/image-upload';
-import { FaPlus } from 'react-icons/fa';
 import AddProductPropertyModal from '@/components/modals/add-product-prop-modal';
+
+type PropValues = { id: number; name: string; value: string | number }[];
 
 interface ProductsFormProps {
   shopId: number;
@@ -27,6 +33,8 @@ interface ProductsFormProps {
   price?: number;
   quantity?: number;
   images?: string[];
+  props?: PropValues;
+  shopProps: Property[];
 }
 
 const ProductsForm: React.FC<ProductsFormProps> = ({
@@ -39,7 +47,10 @@ const ProductsForm: React.FC<ProductsFormProps> = ({
   quantity = 0,
   images = [],
   mode = 'Create',
+  props,
+  shopProps,
 }) => {
+  const [currentProps, setCurrentProps] = useState<PropValues>(props || []);
   const [loading, setLoading] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
@@ -62,6 +73,12 @@ const ProductsForm: React.FC<ProductsFormProps> = ({
       images,
     },
   });
+
+  const onAddProperty = ({ id, name, value }: AddProductPropertySchema) => {
+    console.log(name);
+    setCurrentProps([...currentProps, { id, name, value }]);
+    setModalOpen(false);
+  };
 
   const onSubmit = async (formData: CreateProductSchema) => {
     setLoading(true);
@@ -86,6 +103,10 @@ const ProductsForm: React.FC<ProductsFormProps> = ({
     }
   };
 
+  const onRemoveProperty = (i: number) => {
+    setCurrentProps((prev) => prev.filter((_, index) => index != i));
+  };
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -96,7 +117,9 @@ const ProductsForm: React.FC<ProductsFormProps> = ({
     <form onSubmit={handleSubmit(onSubmit)}>
       <AddProductPropertyModal
         isOpen={isModalOpen}
-        onOuterClick={() => setModalOpen(false)}
+        onAdd={onAddProperty}
+        onClose={() => setModalOpen(false)}
+        props={shopProps}
       />
       <div className="space-y-12">
         <div className="space-y-12">
@@ -171,12 +194,35 @@ const ProductsForm: React.FC<ProductsFormProps> = ({
             />
           </div>
           {/* Props */}
-          <div>
+          <div className="space-y-4">
+            {currentProps.length != 0 && (
+              <div className="flex flex-wrap gap-4">
+                {currentProps.map((p, index) => (
+                  <div
+                    key={p.id}
+                    className="relative flex items-center border border-neutral p-4 space-x-2"
+                  >
+                    <p className="font-medium text-primary">{p.name}:</p>
+                    <p>{p.value}</p>
+                    <div
+                      className="absolute -top-2 -right-2 rounded-full bg-error p-1 cursor-pointer"
+                      onClick={() => onRemoveProperty(index)}
+                    >
+                      <FaXmark />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
             <button
               className="btn btn-neutral"
               disabled={loading}
               onClick={(e) => {
                 e.preventDefault();
+                if (shopProps.length == 0)
+                  return toast.error(
+                    'You have no properties added in your shop.'
+                  );
                 setModalOpen(true);
               }}
             >

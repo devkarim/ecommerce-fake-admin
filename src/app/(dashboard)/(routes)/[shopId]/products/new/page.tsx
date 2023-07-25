@@ -27,7 +27,7 @@ const AddNewProductPage: React.FC<AddNewProductPageProps> = async ({
         />
       </Container>
       <Container>
-        <ProductsForm shopId={shop.id} />
+        <ProductsForm shopId={shop.id} shopProps={shop.props} />
       </Container>
     </>
   );

@@ -10,12 +10,32 @@ export interface InputProps
   bordered?: boolean;
   error?: string;
   right?: React.ReactNode;
+  parentClassName?: string;
+  full?: boolean;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, className, right, bordered = true, ...props }, ref) => {
+  (
+    {
+      label,
+      error,
+      className,
+      right,
+      bordered = true,
+      parentClassName,
+      full,
+      ...props
+    },
+    ref
+  ) => {
     return (
-      <div className="w-full max-w-sm">
+      <div
+        className={cls(
+          'w-full max-w-sm',
+          { 'max-w-none': full },
+          parentClassName
+        )}
+      >
         {label && (
           <label className="label">
             <span className="text-sm sm:text-base font-semibold">{label}</span>

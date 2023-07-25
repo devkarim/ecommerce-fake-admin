@@ -9,15 +9,24 @@ interface SelectProps extends React.InputHTMLAttributes<HTMLSelectElement> {
   placeholder?: string;
   options: string[];
   parentClassName?: string;
+  full?: boolean;
 }
 
 const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
   (
-    { label, placeholder, options, parentClassName, className, ...selectProps },
+    {
+      label,
+      placeholder,
+      options,
+      parentClassName,
+      className,
+      full,
+      ...selectProps
+    },
     ref
   ) => {
     return (
-      <div className="w-full max-w-sm">
+      <div className={cls('w-full max-w-sm', { 'max-w-none': full })}>
         {label && (
           <label className="label">
             <span className="text-sm sm:text-base font-semibold">{label}</span>
