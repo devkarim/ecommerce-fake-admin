@@ -15,6 +15,7 @@ import Input from '@/components/ui/input';
 import Checkbox from '@/components/ui/checkbox';
 import ImageUpload from '@/components/ui/image-upload';
 import { FaPlus } from 'react-icons/fa';
+import AddProductPropertyModal from '@/components/modals/add-product-prop-modal';
 
 interface ProductsFormProps {
   shopId: number;
@@ -41,6 +42,7 @@ const ProductsForm: React.FC<ProductsFormProps> = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [isModalOpen, setModalOpen] = useState(false);
 
   const router = useRouter();
 
@@ -91,119 +93,102 @@ const ProductsForm: React.FC<ProductsFormProps> = ({
   if (!isMounted) return null;
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-12">
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <AddProductPropertyModal
+        isOpen={isModalOpen}
+        onOuterClick={() => setModalOpen(false)}
+      />
       <div className="space-y-12">
-        {/* Images */}
-        <div>
-          <Controller
-            name="images"
-            control={control}
-            rules={{ required: true }}
-            render={({ field, fieldState: { error } }) => (
-              <>
-                <ImageUpload
-                  images={field.value}
-                  disabled={loading}
-                  onUpload={(url) => {
-                    console.log(url);
-                    field.onChange([...field.value, url]);
-                  }}
-                  onRemove={(url) =>
-                    field.onChange(
-                      field.value.filter((current) => current !== url)
-                    )
-                  }
-                />
-                <p className="mt-2 text-error">{error?.message}</p>
-              </>
-            )}
-          />
+        <div className="space-y-12">
+          {/* Images */}
+          <div>
+            <Controller
+              name="images"
+              control={control}
+              rules={{ required: true }}
+              render={({ field, fieldState: { error } }) => (
+                <>
+                  <ImageUpload
+                    images={field.value}
+                    disabled={loading}
+                    onUpload={(url) => {
+                      console.log(url);
+                      field.onChange([...field.value, url]);
+                    }}
+                    onRemove={(url) =>
+                      field.onChange(
+                        field.value.filter((current) => current !== url)
+                      )
+                    }
+                  />
+                  <p className="mt-2 text-error">{error?.message}</p>
+                </>
+              )}
+            />
+          </div>
+          {/* Inputs */}
+          <div className="flex flex-wrap items-center gap-8 sm:gap-12">
+            <Input
+              id="name"
+              type="text"
+              label="Name"
+              placeholder="Your product name here"
+              disabled={loading}
+              error={errors.name?.message}
+              {...register('name')}
+            />
+            <Input
+              id="price"
+              type="number"
+              step="0.001"
+              label="Price"
+              placeholder="Your product price here"
+              disabled={loading}
+              error={errors.price?.message}
+              {...register('price', { valueAsNumber: true })}
+            />
+            <Input
+              id="quantity"
+              type="number"
+              label="Quantity"
+              placeholder="Your product quantity here"
+              disabled={loading}
+              error={errors.quantity?.message}
+              {...register('quantity', { valueAsNumber: true })}
+            />
+          </div>
+          {/* Archived & Featured */}
+          <div className="flex flex-col sm:flex-row gap-8">
+            <Checkbox
+              label="Featured"
+              description="This product will be shown to users on home page."
+              {...register('isArchived')}
+            />
+            <Checkbox
+              label="Archived"
+              description="This product will be hidden on the website."
+              {...register('isFeatured')}
+            />
+          </div>
+          {/* Props */}
+          <div>
+            <button
+              className="btn btn-neutral"
+              disabled={loading}
+              onClick={(e) => {
+                e.preventDefault();
+                setModalOpen(true);
+              }}
+            >
+              <FaPlus />
+              Add property
+            </button>
+          </div>
         </div>
-        {/* Inputs */}
-        <div className="flex flex-wrap items-center gap-8 sm:gap-12">
-          <Input
-            id="name"
-            type="text"
-            label="Name"
-            placeholder="Your product name here"
-            disabled={loading}
-            error={errors.name?.message}
-            {...register('name')}
-          />
-          <Input
-            id="price"
-            type="number"
-            step="0.001"
-            label="Price"
-            placeholder="Your product price here"
-            disabled={loading}
-            error={errors.price?.message}
-            {...register('price', { valueAsNumber: true })}
-          />
-          <Input
-            id="quantity"
-            type="number"
-            label="Quantity"
-            placeholder="Your product quantity here"
-            disabled={loading}
-            error={errors.quantity?.message}
-            {...register('quantity', { valueAsNumber: true })}
-          />
-        </div>
-        {/* Archived & Featured */}
-        <div className="flex flex-col sm:flex-row gap-8">
-          <Checkbox
-            label="Featured"
-            description="This product will be shown to users on home page."
-            {...register('isArchived')}
-          />
-          <Checkbox
-            label="Archived"
-            description="This product will be hidden on the website."
-            {...register('isFeatured')}
-          />
-        </div>
-        {/* Props */}
-        <div>
-          <button
-            className="btn btn-neutral"
-            disabled={loading}
-            onClick={(e) => {
-              e.preventDefault();
-            }}
-          >
-            <FaPlus />
-            Add property
-          </button>
-        </div>
-        <div>
-          <button
-            className="btn btn-neutral"
-            disabled={loading}
-            onClick={(e) => {
-              e.preventDefault();
-            }}
-          >
-            <FaPlus />
-            Add property
-          </button>
-        </div>
-        <div>
-          <button
-            className="btn btn-neutral"
-            disabled={loading}
-            onClick={(e) => {
-              e.preventDefault();
-            }}
-          >
-            <FaPlus />
-            Add property
-          </button>
-        </div>
+        <button className="btn btn-primary sm:h-14 text-lg" disabled={loading}>
+          {mode} product
+        </button>
       </div>
-      <button className="btn btn-primary sm:h-14 text-lg" disabled={loading}>
-        {mode} product
-      </button>
     </form>
   );
 };

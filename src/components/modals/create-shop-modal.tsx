@@ -65,6 +65,7 @@ const CreateShopModal: React.FC<CreateShopModalProps> = ({}) => {
   return (
     <Modal
       isOpen={shopModal.isOpen}
+      onOuterClick={shopModal.onClose}
       title="Create a new shop"
       subtitle="Seamlessly connect your shop to our thriving marketplace."
       primaryActionLabel="Create"
