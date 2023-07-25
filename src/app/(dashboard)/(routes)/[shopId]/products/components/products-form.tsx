@@ -176,6 +176,30 @@ const ProductsForm: React.FC<ProductsFormProps> = ({
             Add property
           </button>
         </div>
+        <div>
+          <button
+            className="btn btn-neutral"
+            disabled={loading}
+            onClick={(e) => {
+              e.preventDefault();
+            }}
+          >
+            <FaPlus />
+            Add property
+          </button>
+        </div>
+        <div>
+          <button
+            className="btn btn-neutral"
+            disabled={loading}
+            onClick={(e) => {
+              e.preventDefault();
+            }}
+          >
+            <FaPlus />
+            Add property
+          </button>
+        </div>
       </div>
       <button className="btn btn-primary sm:h-14 text-lg" disabled={loading}>
         {mode} product

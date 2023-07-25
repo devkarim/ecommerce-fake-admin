@@ -9,6 +9,17 @@ interface MobileMenuProps {}
 const MobileMenu: React.FC<MobileMenuProps> = ({}) => {
   const [isMenuOpen, setMenuOpen] = useState(false);
 
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.classList.add('!overflow-y-hidden', 'md:!overflow-y-auto');
+    } else {
+      document.body.classList.remove(
+        '!overflow-y-hidden',
+        'md:!overflow-y-auto'
+      );
+    }
+  }, [isMenuOpen]);
+
   return (
     <>
       <MdMenu

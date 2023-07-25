@@ -9,3 +9,7 @@
 .btn {
   text-transform: none;
 }
+
+body:has(.disable-scroll) {
+  overflow: hidden;
+}

@@ -26,7 +26,7 @@ const Modal: React.FC<ModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="absolute flex w-full h-full justify-center items-center bg-base-100/60 p-4 backdrop-blur-sm z-[50]">
+    <div className="absolute flex w-full h-full justify-center items-center bg-base-100/60 p-4 backdrop-blur-sm z-[50] disable-scroll">
       <div className="card w-full max-w-xl bg-base-200 shadow-xl p-2">
         <div className="card-body space-y-8">
           <div className="space-y-1">
