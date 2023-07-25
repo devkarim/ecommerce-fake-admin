@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MdMenu } from 'react-icons/md';
 import NavLinks from './nav-links';
 
@@ -10,7 +10,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({}) => {
   const [isMenuOpen, setMenuOpen] = useState(false);
 
   return (
-    <div>
+    <>
       <MdMenu
         className="text-2xl cursor-pointer sm:hidden"
         onClick={() => setMenuOpen((isOpen) => !isOpen)}
@@ -23,7 +23,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({}) => {
           />
         </div>
       )}
-    </div>
+    </>
   );
 };
 

@@ -14,6 +14,7 @@ import {
 import Input from '@/components/ui/input';
 import Checkbox from '@/components/ui/checkbox';
 import ImageUpload from '@/components/ui/image-upload';
+import { FaPlus } from 'react-icons/fa';
 
 interface ProductsFormProps {
   shopId: number;
@@ -92,6 +93,32 @@ const ProductsForm: React.FC<ProductsFormProps> = ({
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-12">
       <div className="space-y-12">
+        {/* Images */}
+        <div>
+          <Controller
+            name="images"
+            control={control}
+            rules={{ required: true }}
+            render={({ field, fieldState: { error } }) => (
+              <>
+                <ImageUpload
+                  images={field.value}
+                  disabled={loading}
+                  onUpload={(url) => {
+                    console.log(url);
+                    field.onChange([...field.value, url]);
+                  }}
+                  onRemove={(url) =>
+                    field.onChange(
+                      field.value.filter((current) => current !== url)
+                    )
+                  }
+                />
+                <p className="mt-2 text-error">{error?.message}</p>
+              </>
+            )}
+          />
+        </div>
         {/* Inputs */}
         <div className="flex flex-wrap items-center gap-8 sm:gap-12">
           <Input
@@ -137,32 +164,17 @@ const ProductsForm: React.FC<ProductsFormProps> = ({
           />
         </div>
         {/* Props */}
-        <div></div>
-        {/* Images */}
         <div>
-          <Controller
-            name="images"
-            control={control}
-            rules={{ required: true }}
-            render={({ field, fieldState: { error } }) => (
-              <>
-                <ImageUpload
-                  images={field.value}
-                  disabled={loading}
-                  onUpload={(url) => {
-                    console.log(url);
-                    field.onChange([...field.value, url]);
-                  }}
-                  onRemove={(url) =>
-                    field.onChange(
-                      field.value.filter((current) => current !== url)
-                    )
-                  }
-                />
-                <p className="mt-2 text-error">{error?.message}</p>
-              </>
-            )}
-          />
+          <button
+            className="btn btn-neutral"
+            disabled={loading}
+            onClick={(e) => {
+              e.preventDefault();
+            }}
+          >
+            <FaPlus />
+            Add property
+          </button>
         </div>
       </div>
       <button className="btn btn-primary sm:h-14 text-lg" disabled={loading}>

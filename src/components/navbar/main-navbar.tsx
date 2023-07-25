@@ -11,8 +11,8 @@ const Navbar: React.FC<NavbarProps> = async ({}) => {
   const user = await getCurrentUser();
 
   return (
-    <div className="border-b border-neutral">
-      <Container className="flex h-16 items-center justify-between sm:justify-start sm:space-x-4">
+    <div className="border-b border-neutral h-16">
+      <Container className="z-10 flex bg-base-100 h-16 items-center w-full fixed sm:static justify-between sm:justify-start sm:space-x-4">
         <ShopDropdown shops={user?.shops || []} />
         <NavLinks className="hidden sm:block space-x-4" />
         <MobileNavbar />
