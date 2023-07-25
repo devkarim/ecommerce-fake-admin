@@ -4,7 +4,7 @@ import { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import {
@@ -13,18 +13,29 @@ import {
 } from '@/schemas/productSchema';
 import Input from '@/components/ui/input';
 import Checkbox from '@/components/ui/checkbox';
+import ImageUpload from '@/components/ui/image-upload';
 
 interface ProductsFormProps {
   shopId: number;
   productId?: number;
   name?: string;
   mode?: 'Create' | 'Edit';
+  isArchived?: boolean;
+  isFeatured?: boolean;
+  price?: number;
+  quantity?: number;
+  images?: string[];
 }
 
 const ProductsForm: React.FC<ProductsFormProps> = ({
   shopId,
   productId,
   name = '',
+  isArchived = false,
+  isFeatured = false,
+  price = 0,
+  quantity = 0,
+  images = [],
   mode = 'Create',
 }) => {
   const [loading, setLoading] = useState(false);
@@ -35,17 +46,18 @@ const ProductsForm: React.FC<ProductsFormProps> = ({
   const {
     handleSubmit,
     register,
+    control,
     formState: { errors },
   } = useForm<CreateProductSchema>({
     resolver: zodResolver(createProductSchema),
     defaultValues: {
       name,
-      isArchived: false,
-      isFeatured: false,
-      price: 0,
-      quantity: 0,
+      isArchived,
+      isFeatured,
+      price,
+      quantity,
+      images,
     },
-    reValidateMode: 'onSubmit',
   });
 
   const onSubmit = async (formData: CreateProductSchema) => {
@@ -80,6 +92,7 @@ const ProductsForm: React.FC<ProductsFormProps> = ({
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-12">
       <div className="space-y-12">
+        {/* Inputs */}
         <div className="flex flex-wrap items-center gap-8 sm:gap-12">
           <Input
             id="name"
@@ -110,6 +123,7 @@ const ProductsForm: React.FC<ProductsFormProps> = ({
             {...register('quantity', { valueAsNumber: true })}
           />
         </div>
+        {/* Archived & Featured */}
         <div className="flex flex-col sm:flex-row gap-8">
           <Checkbox
             label="Featured"
@@ -120,6 +134,34 @@ const ProductsForm: React.FC<ProductsFormProps> = ({
             label="Archived"
             description="This product will be hidden on the website."
             {...register('isFeatured')}
+          />
+        </div>
+        {/* Props */}
+        <div></div>
+        {/* Images */}
+        <div>
+          <Controller
+            name="images"
+            control={control}
+            rules={{ required: true }}
+            render={({ field, fieldState: { error } }) => (
+              <>
+                <ImageUpload
+                  images={field.value}
+                  disabled={loading}
+                  onUpload={(url) => {
+                    console.log(url);
+                    field.onChange([...field.value, url]);
+                  }}
+                  onRemove={(url) =>
+                    field.onChange(
+                      field.value.filter((current) => current !== url)
+                    )
+                  }
+                />
+                <p className="mt-2 text-error">{error?.message}</p>
+              </>
+            )}
           />
         </div>
       </div>

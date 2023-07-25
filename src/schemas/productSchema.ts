@@ -16,6 +16,7 @@ export const createProductSchema = z.object({
     .min(1, 'Quantity must be at least 1.'),
   isArchived: z.boolean().optional().default(false),
   isFeatured: z.boolean().optional().default(false),
+  images: z.string().array().nonempty('At least one image must be uploaded.'),
 });
 
 export type CreateProductSchema = z.infer<typeof createProductSchema>;
