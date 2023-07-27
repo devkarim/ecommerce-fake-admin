@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 
 import { Product } from '@prisma/client';
 import ActionsDropdown from '@/components/ui/update-dropdown';
+import { FaCheck } from 'react-icons/fa';
+import { FaXmark } from 'react-icons/fa6';
 
 interface ProductsListProps {
   products: Product[];
@@ -19,7 +21,7 @@ const ProductsList: React.FC<ProductsListProps> = ({ products }) => {
   const onDelete = async (productId: number, shopId: number) => {};
 
   return (
-    <div>
+    <div className="space-y-12">
       <input
         id="query"
         type="text"
@@ -45,9 +47,9 @@ const ProductsList: React.FC<ProductsListProps> = ({ products }) => {
             {filteredProducts.map((p) => (
               <tr key={p.id} className="border-[1px] border-neutral">
                 <td>{p.name}</td>
-                <td>{p.isFeatured}</td>
-                <td>{p.isArchived}</td>
-                <td>{p.price.toNumber()}</td>
+                <td>{p.isFeatured ? <FaCheck /> : <FaXmark />}</td>
+                <td>{p.isArchived ? <FaCheck /> : <FaXmark />}</td>
+                <td>${+p.price}</td>
                 <td>{p.quantity}</td>
                 <th>
                   <ActionsDropdown

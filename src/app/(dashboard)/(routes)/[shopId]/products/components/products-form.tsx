@@ -20,6 +20,7 @@ import Input from '@/components/ui/input';
 import Checkbox from '@/components/ui/checkbox';
 import ImageUpload from '@/components/ui/image-upload';
 import AddProductPropertyModal from '@/components/modals/add-product-prop-modal';
+import { createProduct } from '@/services/shops';
 
 type PropValues = { id: number; name: string; value: string | number }[];
 
@@ -61,6 +62,7 @@ const ProductsForm: React.FC<ProductsFormProps> = ({
     handleSubmit,
     register,
     control,
+    setValue,
     formState: { errors },
   } = useForm<CreateProductSchema>({
     resolver: zodResolver(createProductSchema),
@@ -75,8 +77,9 @@ const ProductsForm: React.FC<ProductsFormProps> = ({
   });
 
   const onAddProperty = ({ id, name, value }: AddProductPropertySchema) => {
-    console.log(name);
-    setCurrentProps([...currentProps, { id, name, value }]);
+    const newProps = [...currentProps, { id, name, value }];
+    setCurrentProps(newProps);
+    setValue('props', newProps);
     setModalOpen(false);
   };
 
@@ -85,13 +88,14 @@ const ProductsForm: React.FC<ProductsFormProps> = ({
     console.log(formData);
     try {
       if (mode == 'Create') {
+        await createProduct(shopId, formData);
         toast.success('Product added successfully!');
       } else {
         if (!productId) return toast.error('No product ID found.');
         toast.success('Product updated successfully!');
       }
-      // router.refresh();
-      // router.push(`/${shopId}/products`);
+      router.refresh();
+      router.push(`/${shopId}/products`);
     } catch (err) {
       if (err instanceof AxiosError && err.response?.data.message) {
         toast.error(err.response?.data.message);
@@ -184,13 +188,15 @@ const ProductsForm: React.FC<ProductsFormProps> = ({
           <div className="flex flex-col sm:flex-row gap-8">
             <Checkbox
               label="Featured"
+              disabled={loading}
               description="This product will be shown to users on home page."
-              {...register('isArchived')}
+              {...register('isFeatured')}
             />
             <Checkbox
               label="Archived"
               description="This product will be hidden on the website."
-              {...register('isFeatured')}
+              disabled={loading}
+              {...register('isArchived')}
             />
           </div>
           {/* Props */}

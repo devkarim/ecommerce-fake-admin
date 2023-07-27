@@ -30,9 +30,9 @@ model Property {
 
 model PropertyValues {
   id         Int      @id @default(autoincrement())
-  property   Property @relation(fields: [propertyId], references: [id])
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
   propertyId Int
-  product    Product  @relation(fields: [productId], references: [id])
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId  Int
   value      String
 }

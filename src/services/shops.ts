@@ -3,6 +3,7 @@ import { Property, PropertyType, Shop } from '@prisma/client';
 import { BaseResponse, BaseResponseNoData } from '@/types/api';
 
 import client from './client';
+import { CreateProductSchema } from '@/schemas/productSchema';
 
 export type ShopResponse = BaseResponse<Shop>;
 
@@ -62,4 +63,12 @@ export const deleteProperty = (shopId: number, propertyId: number) => {
   return client.delete<BaseResponseNoData>(
     `api/shops/${shopId}/properties/${propertyId}`
   );
+};
+
+/*
+  Product Services
+*/
+
+export const createProduct = (shopId: number, data: CreateProductSchema) => {
+  return client.post<PropertyResponse>(`api/shops/${shopId}/products`, data);
 };

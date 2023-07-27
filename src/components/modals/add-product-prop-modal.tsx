@@ -53,7 +53,7 @@ const AddProductPropertyModal: React.FC<AddProductPropertyModalProps> = ({
   };
 
   useEffect(() => {
-    unregister('value', { keepTouched: false });
+    unregister('value');
     if (currentProp.type == PropertyType.FixedValues) {
       setValue('value', currentProp.values[0]);
     } else if (currentProp.type == PropertyType.Text) {
