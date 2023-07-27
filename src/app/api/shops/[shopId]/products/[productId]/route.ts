@@ -10,9 +10,9 @@ import {
 import { isShopOwnedToUser } from '@/actions/shops';
 import { getPropById } from '@/actions/props';
 
-export async function POST(
+export async function PATCH(
   req: Request,
-  { params }: { params: { shopId: string } }
+  { params }: { params: { shopId: string; productId: string } }
 ) {
   try {
     const session = await getSession();
@@ -21,6 +21,7 @@ export async function POST(
       body;
 
     const shopId = +params.shopId;
+    const productId = +params.productId;
 
     if (!session || !session.user.isAuthenticated) {
       return new NextResponse('Unauthenticated', { status: 403 });
@@ -34,7 +35,16 @@ export async function POST(
         }
       );
     }
-    // Validate create schema
+    // Check product ID
+    if (!productId || isNaN(productId)) {
+      return NextResponse.json(
+        { success: false, message: 'Product ID is required' },
+        {
+          status: 400,
+        }
+      );
+    }
+    // Validate update schema
     const validation = createProductSchema.safeParse(body);
     // If schema didn't pass validation
     if (!validation.success) {
@@ -73,12 +83,32 @@ export async function POST(
         }
       );
     }
-    // Create new product
-    const property = await prisma.product.create({
+    // Edit and remove all relations
+    await prisma.product.update({
+      where: {
+        id: productId,
+      },
       data: {
         name,
         price,
         quantity,
+        images: {
+          deleteMany: {},
+        },
+        shopId,
+        props: {
+          deleteMany: {},
+        },
+        isArchived,
+        isFeatured,
+      },
+    });
+    // Re-add relations
+    const property = await prisma.product.update({
+      where: {
+        id: productId,
+      },
+      data: {
         images: {
           createMany: {
             data: images.map((url) => {
@@ -86,7 +116,6 @@ export async function POST(
             }),
           },
         },
-        shopId,
         props: {
           createMany: {
             data: (props || []).map((p) => {
@@ -94,13 +123,68 @@ export async function POST(
             }),
           },
         },
-        isArchived,
-        isFeatured,
       },
     });
     return NextResponse.json({ success: true, data: property });
   } catch (error) {
-    console.log('[PRODUCTS_POST]', error);
+    console.log('[PRODUCTS_PATCH]', error);
+    return NextResponse.json(
+      { success: false, message: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(
+  req: Request,
+  { params }: { params: { shopId: string; productId: string } }
+) {
+  try {
+    const session = await getSession();
+
+    const shopId = +params.shopId;
+    const productId = +params.productId;
+
+    if (!session || !session.user.isAuthenticated) {
+      return new NextResponse('Unauthenticated', { status: 403 });
+    }
+    // Check shop ID
+    if (!shopId || isNaN(shopId)) {
+      return NextResponse.json(
+        { success: false, message: 'Shop ID is required' },
+        {
+          status: 400,
+        }
+      );
+    }
+    // Check product ID
+    if (!productId || isNaN(productId)) {
+      return NextResponse.json(
+        { success: false, message: 'Product ID is required' },
+        {
+          status: 400,
+        }
+      );
+    }
+    const userId = session.user.id;
+    // If shop not found or not owned by user
+    if (!isShopOwnedToUser(userId, shopId)) {
+      return NextResponse.json(
+        { success: false, message: 'Shop not found or not owned by user' },
+        {
+          status: 400,
+        }
+      );
+    }
+    // Delete product
+    await prisma.product.delete({
+      where: {
+        id: productId,
+      },
+    });
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.log('[PRODUCTS_DELETE]', error);
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
       { status: 500 }

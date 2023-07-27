@@ -13,6 +13,8 @@ interface ShopProductsPageProps {
   };
 }
 
+export const revalidate = 0;
+
 const ShopProductsPage: React.FC<ShopProductsPageProps> = async ({
   params: { shopId },
 }) => {

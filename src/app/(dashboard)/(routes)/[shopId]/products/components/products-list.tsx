@@ -1,12 +1,16 @@
 'use client';
 
 import { useState } from 'react';
+import { AxiosError } from 'axios';
+import toast from 'react-hot-toast';
+import { FaCheck } from 'react-icons/fa';
+import { FaXmark } from 'react-icons/fa6';
 import { useRouter } from 'next/navigation';
 
 import { Product } from '@prisma/client';
+
 import ActionsDropdown from '@/components/ui/update-dropdown';
-import { FaCheck } from 'react-icons/fa';
-import { FaXmark } from 'react-icons/fa6';
+import { deleteProduct } from '@/services/shops';
 
 interface ProductsListProps {
   products: Product[];
@@ -18,7 +22,22 @@ const ProductsList: React.FC<ProductsListProps> = ({ products }) => {
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
   const router = useRouter();
 
-  const onDelete = async (productId: number, shopId: number) => {};
+  const onDelete = async (shopId: number, productId: number) => {
+    setLoading(true);
+    try {
+      await deleteProduct(shopId, productId);
+      toast.success('Product deleted successfully!');
+      router.refresh();
+    } catch (err) {
+      if (err instanceof AxiosError && err.response?.data.message) {
+        toast.error(err.response?.data.message);
+      } else {
+        toast.error(`Unable to delete product.`);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="space-y-12">
@@ -56,7 +75,7 @@ const ProductsList: React.FC<ProductsListProps> = ({ products }) => {
                     onUpdate={() =>
                       router.push(`/${p.shopId}/products/${p.id}`)
                     }
-                    onDelete={() => onDelete(p.id, p.shopId)}
+                    onDelete={() => onDelete(p.shopId, p.id)}
                     disabled={loading}
                   />
                 </th>

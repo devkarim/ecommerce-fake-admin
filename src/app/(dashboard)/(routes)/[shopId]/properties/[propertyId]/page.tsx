@@ -5,14 +5,14 @@ import Header from '@/components/ui/header';
 import Container from '@/components/ui/container';
 import PropertiesForm from '../components/properties-form';
 
-interface AddNewPropertyPageProps {
+interface EditPropertyPageProps {
   params: {
     shopId: string;
     propertyId: string;
   };
 }
 
-const AddNewPropertyPage: React.FC<AddNewPropertyPageProps> = async ({
+const EditPropertyPage: React.FC<EditPropertyPageProps> = async ({
   params: { shopId, propertyId },
 }) => {
   const shop = await getShopWithProps(+shopId);
@@ -47,4 +47,4 @@ const AddNewPropertyPage: React.FC<AddNewPropertyPageProps> = async ({
   );
 };
 
-export default AddNewPropertyPage;
+export default EditPropertyPage;

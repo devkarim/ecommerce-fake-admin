@@ -54,7 +54,36 @@ export const getShopWithProducts = async (shopId: number) => {
 
     const shop = await prisma.shop.findUnique({
       where: { id: shopId },
-      include: { products: true },
+      include: { products: { orderBy: { updatedAt: 'desc' } } },
+    });
+
+    if (!shop || shop.userId != session.user.id) {
+      return null;
+    }
+
+    return shop;
+  } catch (error: any) {
+    return null;
+  }
+};
+
+export const getShopWithProduct = async (shopId: number, productId: number) => {
+  try {
+    const session = await getSession();
+
+    if (!session?.user?.isAuthenticated) {
+      return null;
+    }
+
+    const shop = await prisma.shop.findUnique({
+      where: { id: shopId },
+      include: {
+        products: {
+          where: { id: productId },
+          include: { images: true, props: { include: { property: true } } },
+        },
+        props: true,
+      },
     });
 
     if (!shop || shop.userId != session.user.id) {

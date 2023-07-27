@@ -19,16 +19,16 @@ enum PropertyType {
 }
 
 model Property {
-  id             Int              @id @default(autoincrement())
+  id             Int             @id @default(autoincrement())
   name           String
   type           PropertyType
-  Shop           Shop             @relation(fields: [shopId], references: [id])
+  Shop           Shop            @relation(fields: [shopId], references: [id])
   shopId         Int
   values         String[]
-  PropertyValues PropertyValues[]
+  propertyValues PropertyValue[]
 }
 
-model PropertyValues {
+model PropertyValue {
   id         Int      @id @default(autoincrement())
   property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
   propertyId Int
@@ -60,19 +60,19 @@ model Shop {
 }
 
 model Product {
-  id         Int              @id @default(autoincrement())
+  id         Int             @id @default(autoincrement())
   name       String
-  shop       Shop             @relation(fields: [shopId], references: [id])
+  shop       Shop            @relation(fields: [shopId], references: [id])
   shopId     Int
-  isFeatured Boolean          @default(false)
-  isArchived Boolean          @default(false)
+  isFeatured Boolean         @default(false)
+  isArchived Boolean         @default(false)
   price      Decimal
   quantity   Int
-  props      PropertyValues[]
+  props      PropertyValue[]
   images     Image[]
-  Order      Order[]
-  createdAt  DateTime         @default(now())
-  updatedAt  DateTime         @updatedAt
+  orders     Order[]
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
 }
 
 model Image {

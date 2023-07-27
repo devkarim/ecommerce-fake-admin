@@ -20,7 +20,7 @@ import Input from '@/components/ui/input';
 import Checkbox from '@/components/ui/checkbox';
 import ImageUpload from '@/components/ui/image-upload';
 import AddProductPropertyModal from '@/components/modals/add-product-prop-modal';
-import { createProduct } from '@/services/shops';
+import { createProduct, editProduct } from '@/services/shops';
 
 type PropValues = { id: number; name: string; value: string | number }[];
 
@@ -73,6 +73,7 @@ const ProductsForm: React.FC<ProductsFormProps> = ({
       price,
       quantity,
       images,
+      props,
     },
   });
 
@@ -85,13 +86,13 @@ const ProductsForm: React.FC<ProductsFormProps> = ({
 
   const onSubmit = async (formData: CreateProductSchema) => {
     setLoading(true);
-    console.log(formData);
     try {
       if (mode == 'Create') {
         await createProduct(shopId, formData);
         toast.success('Product added successfully!');
       } else {
         if (!productId) return toast.error('No product ID found.');
+        await editProduct(shopId, productId, formData);
         toast.success('Product updated successfully!');
       }
       router.refresh();
@@ -210,12 +211,16 @@ const ProductsForm: React.FC<ProductsFormProps> = ({
                   >
                     <p className="font-medium text-primary">{p.name}:</p>
                     <p>{p.value}</p>
-                    <div
-                      className="absolute -top-2 -right-2 rounded-full bg-error p-1 cursor-pointer"
-                      onClick={() => onRemoveProperty(index)}
+                    <button
+                      className="absolute -top-2 -right-2 cursor-pointer btn btn-circle btn-xs btn-error"
+                      disabled={loading}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        onRemoveProperty(index);
+                      }}
                     >
                       <FaXmark />
-                    </div>
+                    </button>
                   </div>
                 ))}
               </div>

@@ -72,3 +72,20 @@ export const deleteProperty = (shopId: number, propertyId: number) => {
 export const createProduct = (shopId: number, data: CreateProductSchema) => {
   return client.post<PropertyResponse>(`api/shops/${shopId}/products`, data);
 };
+
+export const editProduct = (
+  shopId: number,
+  productId: number,
+  data: CreateProductSchema
+) => {
+  return client.patch<PropertyResponse>(
+    `api/shops/${shopId}/products/${productId}`,
+    data
+  );
+};
+
+export const deleteProduct = (shopId: number, productId: number) => {
+  return client.delete<BaseResponseNoData>(
+    `api/shops/${shopId}/products/${productId}`
+  );
+};
