@@ -11,14 +11,18 @@ interface ShopProductsPageProps {
   params: {
     shopId: string;
   };
+  searchParams: {
+    page: string;
+  };
 }
 
 export const revalidate = 0;
 
 const ShopProductsPage: React.FC<ShopProductsPageProps> = async ({
   params: { shopId },
+  searchParams: { page },
 }) => {
-  const shop = await getShopWithProducts(+shopId);
+  const shop = await getShopWithProducts(+shopId, +page);
 
   if (!shop) redirect('/');
 
@@ -32,7 +36,10 @@ const ShopProductsPage: React.FC<ShopProductsPageProps> = async ({
         />
       </Container>
       <Container>
-        <ProductsList products={shop.products} />
+        <ProductsList
+          products={shop.products}
+          numOfProducts={shop._count.products}
+        />
       </Container>
     </div>
   );

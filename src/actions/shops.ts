@@ -44,7 +44,11 @@ export const getShopWithProps = async (shopId: number) => {
   }
 };
 
-export const getShopWithProducts = async (shopId: number) => {
+export const getShopWithProducts = async (
+  shopId: number,
+  page: number,
+  take: number = 5
+) => {
   try {
     const session = await getSession();
 
@@ -54,7 +58,16 @@ export const getShopWithProducts = async (shopId: number) => {
 
     const shop = await prisma.shop.findUnique({
       where: { id: shopId },
-      include: { products: { orderBy: { updatedAt: 'desc' } } },
+      include: {
+        _count: {
+          select: { products: true },
+        },
+        products: {
+          skip: take * ((page ?? 1) - 1),
+          take,
+          orderBy: { updatedAt: 'desc' },
+        },
+      },
     });
 
     if (!shop || shop.userId != session.user.id) {

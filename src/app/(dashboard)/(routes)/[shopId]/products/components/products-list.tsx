@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import { FaCheck } from 'react-icons/fa';
 import { FaXmark } from 'react-icons/fa6';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { Product } from '@prisma/client';
 
@@ -14,13 +14,22 @@ import { deleteProduct } from '@/services/shops';
 
 interface ProductsListProps {
   products: Product[];
+  numOfProducts?: number;
 }
 
-const ProductsList: React.FC<ProductsListProps> = ({ products }) => {
+const ProductsList: React.FC<ProductsListProps> = ({
+  products,
+  numOfProducts,
+}) => {
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
+  const params = useSearchParams();
+  const pathname = usePathname();
   const router = useRouter();
+
+  const page = +(params.get('page') ?? 1);
+  const numOfPages = Math.ceil((numOfProducts ?? 0) / 5);
 
   const onDelete = async (shopId: number, productId: number) => {
     setLoading(true);
@@ -38,6 +47,10 @@ const ProductsList: React.FC<ProductsListProps> = ({ products }) => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    setFilteredProducts(products);
+  }, [products]);
 
   return (
     <div className="space-y-12">
@@ -90,6 +103,29 @@ const ProductsList: React.FC<ProductsListProps> = ({ products }) => {
             'Create one by using the "Add new" button above.'}
         </p>
       )}
+      <div className="join flex justify-center">
+        <button
+          className="join-item btn"
+          disabled={page <= 1}
+          onClick={() => {
+            router.push(pathname + `?page=${page - 1}`);
+            router.refresh();
+          }}
+        >
+          «
+        </button>
+        <button className="join-item btn">Page {page}</button>
+        <button
+          className="join-item btn"
+          disabled={page >= numOfPages}
+          onClick={() => {
+            router.push(pathname + `?page=${page + 1}`);
+            router.refresh();
+          }}
+        >
+          »
+        </button>
+      </div>
     </div>
   );
 };
