@@ -63,7 +63,7 @@ export const getShopWithProducts = async (
           select: { products: true },
         },
         products: {
-          skip: take * ((page ?? 1) - 1),
+          skip: take * ((page || 1) - 1),
           take,
           orderBy: { updatedAt: 'desc' },
         },
