@@ -5,6 +5,27 @@ import prisma from '@/lib/prisma';
 import { updateShopSchema } from '@/schemas/shopSchema';
 import { isShopOwnedToUser } from '@/actions/shops';
 
+export async function GET(
+  req: Request,
+  { params }: { params: { shopId: string } }
+) {
+  const shopId = +params.shopId;
+  // Check shop ID
+  if (!shopId || isNaN(shopId)) {
+    return NextResponse.json(
+      { success: false, message: 'Shop ID is required' },
+      {
+        status: 400,
+      }
+    );
+  }
+  // Get shop by id
+  const shop = await prisma.shop.findUnique({
+    where: { id: shopId },
+  });
+  return NextResponse.json({ success: true, data: shop });
+}
+
 export async function PATCH(
   req: Request,
   { params }: { params: { shopId: string } }

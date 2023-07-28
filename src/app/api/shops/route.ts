@@ -4,6 +4,18 @@ import getSession from '@/actions/getSession';
 import prisma from '@/lib/prisma';
 import { createShopSchema } from '@/schemas/shopSchema';
 
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const page = +(searchParams.get('page') ?? 1) || 1;
+  // Get shops
+  const shops = await prisma.shop.findMany({
+    skip: (page - 1) * 10,
+    take: 10,
+    orderBy: { updatedAt: 'desc' },
+  });
+  return NextResponse.json({ success: true, data: shops });
+}
+
 export async function POST(req: Request) {
   try {
     const session = await getSession();

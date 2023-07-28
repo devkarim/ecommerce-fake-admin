@@ -22,7 +22,7 @@ model Property {
   id             Int             @id @default(autoincrement())
   name           String
   type           PropertyType
-  Shop           Shop            @relation(fields: [shopId], references: [id])
+  shop           Shop            @relation(fields: [shopId], references: [id])
   shopId         Int
   values         String[]
   propertyValues PropertyValue[]

@@ -20,6 +20,7 @@ module.exports = {
           ...require('daisyui/src/theming/themes')['[data-theme=light]'],
           neutral: '#DCDCDC',
           primary: '#BE4B92',
+          'primary-focus': '#C765A2',
           'primary-content': '#ffffff',
           'neutral-content': '#000000',
           'base-100': '#EDEDED',

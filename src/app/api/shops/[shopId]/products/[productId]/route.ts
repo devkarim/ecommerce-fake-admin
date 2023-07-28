@@ -10,6 +10,38 @@ import {
 import { isShopOwnedToUser } from '@/actions/shops';
 import { getPropById } from '@/actions/props';
 
+export async function GET(
+  req: Request,
+  { params }: { params: { shopId: string; productId: string } }
+) {
+  const shopId = +params.shopId;
+  const productId = +params.productId;
+  // Check shop ID
+  if (!shopId || isNaN(shopId)) {
+    return NextResponse.json(
+      { success: false, message: 'Shop ID is required' },
+      {
+        status: 400,
+      }
+    );
+  }
+  // Check product ID
+  if (!productId || isNaN(productId)) {
+    return NextResponse.json(
+      { success: false, message: 'Product ID is required' },
+      {
+        status: 400,
+      }
+    );
+  }
+  // Get product details
+  const product = await prisma.product.findUnique({
+    where: { shopId, id: productId },
+    include: { props: true, images: true },
+  });
+  return NextResponse.json({ success: true, data: product });
+}
+
 export async function PATCH(
   req: Request,
   { params }: { params: { shopId: string; productId: string } }

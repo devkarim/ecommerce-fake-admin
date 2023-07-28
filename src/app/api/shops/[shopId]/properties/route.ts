@@ -7,6 +7,27 @@ import prisma from '@/lib/prisma';
 import { createPropertySchema } from '@/schemas/propertySchema';
 import { isShopOwnedToUser } from '@/actions/shops';
 
+export async function GET(
+  req: Request,
+  { params }: { params: { shopId: string } }
+) {
+  const shopId = +params.shopId;
+  // Check shop ID
+  if (!shopId || isNaN(shopId)) {
+    return NextResponse.json(
+      { success: false, message: 'Shop ID is required' },
+      {
+        status: 400,
+      }
+    );
+  }
+  // Get properties based on shop
+  const properties = await prisma.property.findMany({
+    where: { shopId },
+  });
+  return NextResponse.json({ success: true, data: properties });
+}
+
 export async function POST(
   req: Request,
   { params }: { params: { shopId: string } }
