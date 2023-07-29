@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AxiosError } from 'axios';
 import { toast } from 'react-hot-toast';
 import { useForm } from 'react-hook-form';
@@ -10,14 +10,21 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { cls } from '@/lib/utils';
 import { updateShopSchema, UpdateShopSchema } from '@/schemas/shopSchema';
 import { updateShop } from '@/services/shops';
+import Checkbox from '@/components/ui/checkbox';
 
 interface SettingsFormProps {
   id: number;
   name: string;
+  isFeatured: boolean;
 }
 
-const SettingsForm: React.FC<SettingsFormProps> = ({ id, name }) => {
+const SettingsForm: React.FC<SettingsFormProps> = ({
+  id,
+  name,
+  isFeatured = false,
+}) => {
   const router = useRouter();
+  const [isMounted, setIsMounted] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const {
@@ -28,15 +35,17 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ id, name }) => {
     resolver: zodResolver(updateShopSchema),
     defaultValues: {
       name,
+      isFeatured,
     },
     reValidateMode: 'onSubmit',
   });
 
   const onSubmit = async (values: UpdateShopSchema) => {
     setLoading(true);
-    const { name } = values;
+    const { name, isFeatured } = values;
+    console.log(isFeatured);
     try {
-      await updateShop(id, name);
+      await updateShop(id, name, isFeatured);
       router.refresh();
       toast.success('Shop updated successfully!');
     } catch (err) {
@@ -50,37 +59,55 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ id, name }) => {
     }
   };
 
+  useEffect(() => {
+    setIsMounted(true);
+    return () => setIsMounted(false);
+  }, []);
+
+  if (!isMounted) return null;
+
   return (
     <form className="pt-4" onSubmit={handleSubmit(onSubmit)}>
       <div className="form-control max-w-md">
-        <label className="label">
-          <span className="text-sm sm:text-base font-semibold">Name</span>
-        </label>
-        <div className="flex space-x-4">
-          <input
-            id="name"
-            type="text"
-            placeholder="Your shop name here"
-            className={cls('input input-bordered w-full', {
-              'input-error': !!errors.name,
-            })}
+        <div className="flex flex-col space-y-8">
+          <div>
+            <label className="label">
+              <span className="text-sm sm:text-base font-semibold">Name</span>
+            </label>
+            <div className="flex space-x-4">
+              <input
+                id="name"
+                type="text"
+                placeholder="Your shop name here"
+                className={cls('input input-bordered w-full', {
+                  'input-error': !!errors.name,
+                })}
+                disabled={loading}
+                {...register('name')}
+              />
+            </div>
+          </div>
+          {errors.name && (
+            <label className="label">
+              <span className="label-text-alt text-error font-medium">
+                {errors.name.message}
+              </span>
+            </label>
+          )}
+          <Checkbox
+            label="Featured?"
+            parentClassName="max-w-none sm:max-w-xs"
+            description="This shop will be shown to users on home page."
             disabled={loading}
-            {...register('name')}
+            {...register('isFeatured')}
           />
           <button
             disabled={loading}
-            className="btn btn-neutral w-24 sm:w-32 text-sm sm:text-base"
+            className="btn btn-neutral sm:max-w-xs text-sm sm:text-base"
           >
-            Rename
+            Save Changes
           </button>
         </div>
-        {errors.name && (
-          <label className="label">
-            <span className="label-text-alt text-error font-medium">
-              {errors.name.message}
-            </span>
-          </label>
-        )}
       </div>
     </form>
   );

@@ -13,12 +13,16 @@ export type PropertyResponse = BaseResponse<Property>;
   Shop Services
 */
 
-export const createShop = (name: string) => {
-  return client.post<ShopResponse>('api/shops', { name });
+export const createShop = (name: string, isFeatured: boolean = false) => {
+  return client.post<ShopResponse>('api/shops', { name, isFeatured });
 };
 
-export const updateShop = (id: number, name: string) => {
-  return client.patch<ShopResponse>(`api/shops/${id}`, { name });
+export const updateShop = (
+  id: number,
+  name: string,
+  isFeatured: boolean = false
+) => {
+  return client.patch<ShopResponse>(`api/shops/${id}`, { name, isFeatured });
 };
 
 export const deleteShop = (id: number) => {

@@ -12,6 +12,7 @@ import useShopModal from '@/hooks/useShopModal';
 import { cls } from '@/lib/utils';
 import { createShopSchema, CreateShopSchema } from '@/schemas/shopSchema';
 import { createShop } from '@/services/shops';
+import Checkbox from '../ui/checkbox';
 
 interface CreateShopModalProps {}
 
@@ -30,6 +31,7 @@ const CreateShopModal: React.FC<CreateShopModalProps> = ({}) => {
     resolver: zodResolver(createShopSchema),
     defaultValues: {
       name: '',
+      isFeatured: false,
     },
     reValidateMode: 'onSubmit',
   });
@@ -75,7 +77,7 @@ const CreateShopModal: React.FC<CreateShopModalProps> = ({}) => {
       disabled={loading}
     >
       <form className="pt-4">
-        <div className="form-control w-full">
+        <div className="form-control w-full mb-6">
           <label className="label">
             <span className="label-text">Name</span>
           </label>
@@ -97,6 +99,13 @@ const CreateShopModal: React.FC<CreateShopModalProps> = ({}) => {
             </label>
           )}
         </div>
+        <Checkbox
+          label="Featured?"
+          parentClassName="max-w-none w-full"
+          description="This shop will be shown to users on home page."
+          disabled={loading}
+          {...register('isFeatured')}
+        />
       </form>
     </Modal>
   );

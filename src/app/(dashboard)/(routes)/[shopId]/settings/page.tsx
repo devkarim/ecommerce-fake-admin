@@ -27,7 +27,11 @@ const ShopProperties: React.FC<ShopPropertiesProps> = async ({
       </Container>
       <Container className="border-b border-neutral">
         <h3 className="text-xl lg:text-3xl font-medium">General</h3>
-        <SettingsForm id={shop.id} name={shop.name} />
+        <SettingsForm
+          id={shop.id}
+          name={shop.name}
+          isFeatured={shop.isFeatured}
+        />
       </Container>
       <DangerZone id={shop.id} />
     </div>

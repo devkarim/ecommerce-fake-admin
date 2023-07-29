@@ -21,7 +21,7 @@ export async function POST(req: Request) {
     const session = await getSession();
     const body = await req.json();
 
-    const { name } = body;
+    const { name, isFeatured } = body;
 
     if (!session || !session.user.isAuthenticated) {
       return new NextResponse('Unauthenticated', { status: 403 });
@@ -64,6 +64,7 @@ export async function POST(req: Request) {
       data: {
         name,
         userId,
+        isFeatured,
       },
     });
 

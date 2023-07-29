@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 export const createShopSchema = z.object({
   name: z.string().min(3, 'Shop name must be at least 3 characters long.'),
+  isFeatured: z.boolean().default(false),
 });
 
 export type CreateShopSchema = z.infer<typeof createShopSchema>;
