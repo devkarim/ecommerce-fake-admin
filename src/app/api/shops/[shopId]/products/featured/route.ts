@@ -7,7 +7,7 @@ export async function GET(
   { params }: { params: { shopId: string } }
 ) {
   const { searchParams } = new URL(req.url);
-  const page = +(searchParams.get('page') ?? 1) || 1;
+  const page = +(searchParams.get('page') || 1) || 1;
   const shopId = +params.shopId;
   // Check shop ID
   if (!shopId || isNaN(shopId)) {
