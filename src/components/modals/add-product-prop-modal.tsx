@@ -40,8 +40,8 @@ const AddProductPropertyModal: React.FC<AddProductPropertyModalProps> = ({
   } = useForm<AddProductPropertySchema>({
     resolver: zodResolver(addProductPropertySchema),
     defaultValues: {
-      id: currentProp.id,
-      name: currentProp.name,
+      id: currentProp?.id,
+      name: currentProp?.name,
       value: '',
     },
   });
@@ -54,14 +54,14 @@ const AddProductPropertyModal: React.FC<AddProductPropertyModalProps> = ({
 
   useEffect(() => {
     unregister('value');
-    if (currentProp.type == PropertyType.FixedValues) {
-      setValue('value', currentProp.values[0]);
-    } else if (currentProp.type == PropertyType.Text) {
+    if (currentProp?.type == PropertyType.FixedValues) {
+      setValue('value', currentProp?.values[0]);
+    } else if (currentProp?.type == PropertyType.Text) {
       setValue('value', '');
     } else {
       setValue('value', 0);
     }
-    setValue('id', currentProp.id);
+    setValue('id', currentProp?.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentProp, isOpen]);
 
