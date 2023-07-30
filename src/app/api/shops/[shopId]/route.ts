@@ -35,7 +35,7 @@ export async function PATCH(
     const body = await req.json();
     const { shopId } = params;
 
-    const { name, isFeatured } = body;
+    const { name, isFeatured, imageUrl } = body;
 
     if (!session || !session.user.isAuthenticated) {
       return new NextResponse('Unauthenticated', { status: 403 });
@@ -52,7 +52,11 @@ export async function PATCH(
 
     const id = +shopId;
 
-    const validation = updateShopSchema.safeParse({ name, isFeatured });
+    const validation = updateShopSchema.safeParse({
+      name,
+      isFeatured,
+      imageUrl,
+    });
 
     if (!validation.success) {
       return NextResponse.json(
@@ -102,6 +106,7 @@ export async function PATCH(
       data: {
         name,
         isFeatured,
+        imageUrl,
       },
     });
 

@@ -3,24 +3,27 @@
 import { useEffect, useState } from 'react';
 import { AxiosError } from 'axios';
 import { toast } from 'react-hot-toast';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { cls } from '@/lib/utils';
-import { updateShopSchema, UpdateShopSchema } from '@/schemas/shopSchema';
 import { updateShop } from '@/services/shops';
 import Checkbox from '@/components/ui/checkbox';
+import ImageUpload from '@/components/ui/image-upload';
+import { updateShopSchema, UpdateShopSchema } from '@/schemas/shopSchema';
 
 interface SettingsFormProps {
   id: number;
   name: string;
+  imageUrl: string;
   isFeatured: boolean;
 }
 
 const SettingsForm: React.FC<SettingsFormProps> = ({
   id,
   name,
+  imageUrl,
   isFeatured = false,
 }) => {
   const router = useRouter();
@@ -30,11 +33,13 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
   const {
     handleSubmit,
     register,
+    control,
     formState: { errors },
   } = useForm<UpdateShopSchema>({
     resolver: zodResolver(updateShopSchema),
     defaultValues: {
       name,
+      imageUrl,
       isFeatured,
     },
     reValidateMode: 'onSubmit',
@@ -42,10 +47,10 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
 
   const onSubmit = async (values: UpdateShopSchema) => {
     setLoading(true);
-    const { name, isFeatured } = values;
+    const { name, imageUrl, isFeatured } = values;
     console.log(isFeatured);
     try {
-      await updateShop(id, name, isFeatured);
+      await updateShop(id, name, imageUrl, isFeatured);
       router.refresh();
       toast.success('Shop updated successfully!');
     } catch (err) {
@@ -70,6 +75,27 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
     <form className="pt-4" onSubmit={handleSubmit(onSubmit)}>
       <div className="form-control max-w-md">
         <div className="flex flex-col space-y-8">
+          <div>
+            <Controller
+              name="imageUrl"
+              control={control}
+              rules={{ required: true }}
+              render={({ field, fieldState: { error } }) => (
+                <>
+                  <ImageUpload
+                    options={{ maxFiles: 1 }}
+                    images={field.value ? [field.value] : []}
+                    disabled={loading}
+                    onUpload={(url) => {
+                      field.onChange(url);
+                    }}
+                    onRemove={(_) => field.onChange('')}
+                  />
+                  <p className="mt-2 text-error">{error?.message}</p>
+                </>
+              )}
+            />
+          </div>
           <div>
             <label className="label">
               <span className="text-sm sm:text-base font-semibold">Name</span>

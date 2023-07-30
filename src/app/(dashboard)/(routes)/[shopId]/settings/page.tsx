@@ -30,6 +30,7 @@ const ShopProperties: React.FC<ShopPropertiesProps> = async ({
         <SettingsForm
           id={shop.id}
           name={shop.name}
+          imageUrl={shop.imageUrl}
           isFeatured={shop.isFeatured}
         />
       </Container>

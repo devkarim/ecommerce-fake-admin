@@ -140,7 +140,6 @@ const ProductsForm: React.FC<ProductsFormProps> = ({
                     images={field.value}
                     disabled={loading}
                     onUpload={(url) => {
-                      console.log(url);
                       field.onChange([...field.value, url]);
                     }}
                     onRemove={(url) =>

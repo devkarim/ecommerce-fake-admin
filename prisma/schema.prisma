@@ -55,6 +55,7 @@ model Shop {
   userId     Int
   products   Product[]
   props      Property[]
+  imageUrl   String
   isFeatured Boolean    @default(false)
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt

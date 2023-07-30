@@ -3,13 +3,14 @@
 import Image from 'next/image';
 import { FaTrash } from 'react-icons/fa';
 import { BiImageAdd } from 'react-icons/bi';
-import { CldUploadWidget } from 'next-cloudinary';
+import { CldUploadWidget, CldUploadWidgetPropsOptions } from 'next-cloudinary';
 
 interface ImageUploadProps {
   images?: string[];
   onUpload: (url: string) => void;
   onRemove: (url: string) => void;
   disabled?: boolean;
+  options?: CldUploadWidgetPropsOptions;
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({
@@ -17,6 +18,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   onUpload,
   onRemove,
   disabled,
+  options,
 }) => {
   return (
     <div>
@@ -43,6 +45,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       <CldUploadWidget
         options={{
           resourceType: 'image',
+          ...options,
         }}
         onUpload={(s: any) => onUpload(s.info.secure_url)}
         uploadPreset="tkwks7ba"

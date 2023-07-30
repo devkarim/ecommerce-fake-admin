@@ -13,16 +13,25 @@ export type PropertyResponse = BaseResponse<Property>;
   Shop Services
 */
 
-export const createShop = (name: string, isFeatured: boolean = false) => {
-  return client.post<ShopResponse>('api/shops', { name, isFeatured });
+export const createShop = (
+  name: string,
+  imageUrl: string,
+  isFeatured: boolean = false
+) => {
+  return client.post<ShopResponse>('api/shops', { name, imageUrl, isFeatured });
 };
 
 export const updateShop = (
   id: number,
   name: string,
+  imageUrl: string,
   isFeatured: boolean = false
 ) => {
-  return client.patch<ShopResponse>(`api/shops/${id}`, { name, isFeatured });
+  return client.patch<ShopResponse>(`api/shops/${id}`, {
+    name,
+    imageUrl,
+    isFeatured,
+  });
 };
 
 export const deleteShop = (id: number) => {

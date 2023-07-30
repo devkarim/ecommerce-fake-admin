@@ -21,13 +21,17 @@ export async function POST(req: Request) {
     const session = await getSession();
     const body = await req.json();
 
-    const { name, isFeatured } = body;
+    const { name, imageUrl, isFeatured } = body;
 
     if (!session || !session.user.isAuthenticated) {
       return new NextResponse('Unauthenticated', { status: 403 });
     }
 
-    const validation = createShopSchema.safeParse({ name });
+    const validation = createShopSchema.safeParse({
+      name,
+      isFeatured,
+      imageUrl,
+    });
 
     if (!validation.success) {
       return NextResponse.json(
@@ -65,6 +69,7 @@ export async function POST(req: Request) {
         name,
         userId,
         isFeatured,
+        imageUrl,
       },
     });
 

@@ -2,17 +2,18 @@
 
 import { useState } from 'react';
 import { AxiosError } from 'axios';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import Modal from '@/components/ui/modal';
-import useShopModal from '@/hooks/useShopModal';
 import { cls } from '@/lib/utils';
-import { createShopSchema, CreateShopSchema } from '@/schemas/shopSchema';
-import { createShop } from '@/services/shops';
 import Checkbox from '../ui/checkbox';
+import Modal from '@/components/ui/modal';
+import ImageUpload from '../ui/image-upload';
+import { createShop } from '@/services/shops';
+import useShopModal from '@/hooks/useShopModal';
+import { createShopSchema, CreateShopSchema } from '@/schemas/shopSchema';
 
 interface CreateShopModalProps {}
 
@@ -26,6 +27,7 @@ const CreateShopModal: React.FC<CreateShopModalProps> = ({}) => {
     handleSubmit,
     register,
     reset,
+    control,
     formState: { errors },
   } = useForm<CreateShopSchema>({
     resolver: zodResolver(createShopSchema),
@@ -33,14 +35,13 @@ const CreateShopModal: React.FC<CreateShopModalProps> = ({}) => {
       name: '',
       isFeatured: false,
     },
-    reValidateMode: 'onSubmit',
   });
 
   const onCreate = async (values: CreateShopSchema) => {
     setLoading(true);
-    const { name } = values;
+    const { name, isFeatured, imageUrl } = values;
     try {
-      const { data: shop } = await createShop(name);
+      const { data: shop } = await createShop(name, imageUrl, isFeatured);
       if (shop.success) {
         router.refresh();
         router.push(`/${shop.data.id}`);
@@ -77,6 +78,29 @@ const CreateShopModal: React.FC<CreateShopModalProps> = ({}) => {
       disabled={loading}
     >
       <form className="pt-4">
+        {/* Image */}
+        <div>
+          <Controller
+            name="imageUrl"
+            control={control}
+            rules={{ required: true }}
+            render={({ field, fieldState: { error } }) => (
+              <>
+                <ImageUpload
+                  options={{ maxFiles: 1 }}
+                  images={field.value ? [field.value] : []}
+                  disabled={loading}
+                  onUpload={(url) => {
+                    field.onChange(url);
+                  }}
+                  onRemove={(_) => field.onChange('')}
+                />
+                <p className="mt-2 text-error">{error?.message}</p>
+              </>
+            )}
+          />
+        </div>
+        {/* Name */}
         <div className="form-control w-full mb-6">
           <label className="label">
             <span className="label-text">Name</span>
@@ -99,8 +123,9 @@ const CreateShopModal: React.FC<CreateShopModalProps> = ({}) => {
             </label>
           )}
         </div>
+        {/* Featured */}
         <Checkbox
-          label="Featured?"
+          label="Featured"
           parentClassName="max-w-none w-full"
           description="This shop will be shown to users on home page."
           disabled={loading}
