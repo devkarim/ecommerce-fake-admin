@@ -95,7 +95,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
             </label>
           )}
           <Checkbox
-            label="Featured?"
+            label="Featured"
             parentClassName="max-w-none sm:max-w-xs"
             description="This shop will be shown to users on home page."
             disabled={loading}
