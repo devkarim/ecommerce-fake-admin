@@ -15,7 +15,10 @@ export async function GET(
   { params }: { params: { shopId: string } }
 ) {
   const { searchParams } = new URL(req.url);
-  const page = +(searchParams.get('page') ?? 1) || 1;
+  const { page: p, ...propsParams } = Object.fromEntries(
+    searchParams.entries()
+  );
+  const page = +(p ?? 1) || 1;
   const shopId = +params.shopId;
   // Check shop ID
   if (!shopId || isNaN(shopId)) {
@@ -28,7 +31,28 @@ export async function GET(
   }
   // Get products based on shop
   const products = await prisma.product.findMany({
-    where: { shopId },
+    where: {
+      shopId,
+      AND:
+        Object.keys(propsParams).length != 0
+          ? Object.keys(propsParams).map((k) => {
+              const value = propsParams[k];
+              return {
+                props: {
+                  some: {
+                    property: {
+                      name: {
+                        equals: k,
+                        mode: 'insensitive',
+                      },
+                    },
+                    value: { in: value.split(','), mode: 'insensitive' },
+                  },
+                },
+              };
+            })
+          : [],
+    },
     skip: (page - 1) * 10,
     take: 10,
     orderBy: { updatedAt: 'desc' },
