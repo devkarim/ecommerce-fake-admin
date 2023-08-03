@@ -12,12 +12,15 @@ import { updateShop } from '@/services/shops';
 import Checkbox from '@/components/ui/checkbox';
 import ImageUpload from '@/components/ui/image-upload';
 import { updateShopSchema, UpdateShopSchema } from '@/schemas/shopSchema';
+import Input from '@/components/ui/input';
 
 interface SettingsFormProps {
   id: number;
   name: string;
   imageUrl: string;
   isFeatured: boolean;
+  billboardImageUrl?: string | null;
+  billboardCaption?: string | null;
 }
 
 const SettingsForm: React.FC<SettingsFormProps> = ({
@@ -25,6 +28,8 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
   name,
   imageUrl,
   isFeatured = false,
+  billboardImageUrl,
+  billboardCaption,
 }) => {
   const router = useRouter();
   const [isMounted, setIsMounted] = useState(false);
@@ -41,16 +46,25 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
       name,
       imageUrl,
       isFeatured,
+      billboardImageUrl,
+      billboardCaption,
     },
     reValidateMode: 'onSubmit',
   });
 
   const onSubmit = async (values: UpdateShopSchema) => {
     setLoading(true);
-    const { name, imageUrl, isFeatured } = values;
-    console.log(isFeatured);
+    const { name, imageUrl, isFeatured, billboardCaption, billboardImageUrl } =
+      values;
     try {
-      await updateShop(id, name, imageUrl, isFeatured);
+      await updateShop(
+        id,
+        name,
+        imageUrl,
+        isFeatured,
+        billboardCaption,
+        billboardImageUrl
+      );
       router.refresh();
       toast.success('Shop updated successfully!');
     } catch (err) {
@@ -75,57 +89,69 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
     <form className="pt-4" onSubmit={handleSubmit(onSubmit)}>
       <div className="form-control max-w-md">
         <div className="flex flex-col space-y-8">
-          <div>
-            <Controller
-              name="imageUrl"
-              control={control}
-              rules={{ required: true }}
-              render={({ field, fieldState: { error } }) => (
-                <>
-                  <ImageUpload
-                    options={{ maxFiles: 1 }}
-                    images={field.value ? [field.value] : []}
-                    disabled={loading}
-                    onUpload={(url) => {
-                      field.onChange(url);
-                    }}
-                    onRemove={(_) => field.onChange('')}
-                  />
-                  <p className="mt-2 text-error">{error?.message}</p>
-                </>
-              )}
-            />
-          </div>
-          <div>
-            <label className="label">
-              <span className="text-sm sm:text-base font-semibold">Name</span>
-            </label>
-            <div className="flex space-x-4">
-              <input
-                id="name"
-                type="text"
-                placeholder="Your shop name here"
-                className={cls('input input-bordered w-full', {
-                  'input-error': !!errors.name,
-                })}
-                disabled={loading}
-                {...register('name')}
-              />
-            </div>
-          </div>
-          {errors.name && (
-            <label className="label">
-              <span className="label-text-alt text-error font-medium">
-                {errors.name.message}
-              </span>
-            </label>
-          )}
+          <h3 className="text-xl lg:text-3xl font-medium">General</h3>
+          <Controller
+            name="imageUrl"
+            control={control}
+            rules={{ required: true }}
+            render={({ field, fieldState: { error } }) => (
+              <>
+                <ImageUpload
+                  options={{ maxFiles: 1 }}
+                  images={field.value ? [field.value] : []}
+                  disabled={loading}
+                  onUpload={(url) => {
+                    field.onChange(url);
+                  }}
+                  onRemove={(_) => field.onChange('')}
+                />
+                <p className="mt-2 text-error">{error?.message}</p>
+              </>
+            )}
+          />
+          <Input
+            id="name"
+            type="text"
+            label="Shop name"
+            placeholder="Your shop name here"
+            disabled={loading}
+            error={errors.name?.message}
+            {...register('name')}
+          />
           <Checkbox
             label="Featured"
             parentClassName="max-w-none sm:max-w-xs"
             description="This shop will be shown to users on home page."
             disabled={loading}
             {...register('isFeatured')}
+          />
+          <h3 className="text-xl lg:text-3xl font-medium">Billboard</h3>
+          <Input
+            id="billboardCaption"
+            type="text"
+            placeholder="Your billboard caption here"
+            disabled={loading}
+            error={errors.billboardCaption?.message}
+            {...register('billboardCaption')}
+          />
+          <Controller
+            name="billboardImageUrl"
+            control={control}
+            rules={{ required: true }}
+            render={({ field, fieldState: { error } }) => (
+              <>
+                <ImageUpload
+                  options={{ maxFiles: 1 }}
+                  images={field.value ? [field.value] : []}
+                  disabled={loading}
+                  onUpload={(url) => {
+                    field.onChange(url);
+                  }}
+                  onRemove={(_) => field.onChange('')}
+                />
+                <p className="mt-2 text-error">{error?.message}</p>
+              </>
+            )}
           />
           <button
             disabled={loading}

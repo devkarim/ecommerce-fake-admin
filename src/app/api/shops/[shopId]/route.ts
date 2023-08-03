@@ -33,9 +33,10 @@ export async function PATCH(
   try {
     const session = await getSession();
     const body = await req.json();
-    const { shopId } = params;
+    const shopId = +params.shopId;
 
-    const { name, isFeatured, imageUrl } = body;
+    const { name, isFeatured, imageUrl, billboardCaption, billboardImageUrl } =
+      body;
 
     if (!session || !session.user.isAuthenticated) {
       return new NextResponse('Unauthenticated', { status: 403 });
@@ -50,12 +51,12 @@ export async function PATCH(
       );
     }
 
-    const id = +shopId;
-
     const validation = updateShopSchema.safeParse({
       name,
       isFeatured,
       imageUrl,
+      billboardCaption,
+      billboardImageUrl,
     });
 
     if (!validation.success) {
@@ -70,7 +71,7 @@ export async function PATCH(
     const userId = session.user.id;
 
     // If shop not found or not owned by user
-    if (!isShopOwnedToUser(userId, id)) {
+    if (!isShopOwnedToUser(userId, shopId)) {
       return NextResponse.json(
         { success: false, message: 'Shop not found or not owned by user' },
         {
@@ -87,7 +88,7 @@ export async function PATCH(
     });
 
     // If user has same shop name except the one he is updating right now
-    if (existingShop && existingShop.id != id) {
+    if (existingShop && existingShop.id != shopId) {
       return NextResponse.json(
         {
           success: false,
@@ -101,12 +102,24 @@ export async function PATCH(
 
     const shop = await prisma.shop.update({
       where: {
-        id,
+        id: shopId,
       },
       data: {
         name,
         isFeatured,
         imageUrl,
+        billboard: {
+          upsert: {
+            create: {
+              caption: billboardCaption,
+              imageUrl: billboardImageUrl,
+            },
+            update: {
+              caption: billboardCaption,
+              imageUrl: billboardImageUrl,
+            },
+          },
+        },
       },
     });
 

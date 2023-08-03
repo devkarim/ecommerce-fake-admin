@@ -16,21 +16,33 @@ export type PropertyResponse = BaseResponse<Property>;
 export const createShop = (
   name: string,
   imageUrl: string,
-  isFeatured: boolean = false
+  isFeatured: boolean = false,
+  billboardCaption?: string | null,
+  billboardImageUrl?: string | null
 ) => {
-  return client.post<ShopResponse>('api/shops', { name, imageUrl, isFeatured });
+  return client.post<ShopResponse>('api/shops', {
+    name,
+    imageUrl,
+    isFeatured,
+    billboardCaption,
+    billboardImageUrl,
+  });
 };
 
 export const updateShop = (
   id: number,
   name: string,
   imageUrl: string,
-  isFeatured: boolean = false
+  isFeatured: boolean = false,
+  billboardCaption?: string | null,
+  billboardImageUrl?: string | null
 ) => {
   return client.patch<ShopResponse>(`api/shops/${id}`, {
     name,
     imageUrl,
     isFeatured,
+    billboardCaption,
+    billboardImageUrl,
   });
 };
 

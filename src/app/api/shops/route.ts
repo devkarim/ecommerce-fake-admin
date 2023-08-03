@@ -21,7 +21,8 @@ export async function POST(req: Request) {
     const session = await getSession();
     const body = await req.json();
 
-    const { name, imageUrl, isFeatured } = body;
+    const { name, imageUrl, isFeatured, billboardCaption, billboardImageUrl } =
+      body;
 
     if (!session || !session.user.isAuthenticated) {
       return new NextResponse('Unauthenticated', { status: 403 });
@@ -31,6 +32,8 @@ export async function POST(req: Request) {
       name,
       isFeatured,
       imageUrl,
+      billboardCaption,
+      billboardImageUrl,
     });
 
     if (!validation.success) {
@@ -70,6 +73,12 @@ export async function POST(req: Request) {
         userId,
         isFeatured,
         imageUrl,
+        billboard: {
+          create: {
+            caption: billboardCaption,
+            imageUrl: billboardImageUrl,
+          },
+        },
       },
     });
 

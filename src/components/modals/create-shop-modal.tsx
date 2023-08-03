@@ -14,6 +14,7 @@ import ImageUpload from '../ui/image-upload';
 import { createShop } from '@/services/shops';
 import useShopModal from '@/hooks/useShopModal';
 import { createShopSchema, CreateShopSchema } from '@/schemas/shopSchema';
+import Input from '../ui/input';
 
 interface CreateShopModalProps {}
 
@@ -77,51 +78,39 @@ const CreateShopModal: React.FC<CreateShopModalProps> = ({}) => {
       onSecondaryAction={onClose}
       disabled={loading}
     >
-      <form className="pt-4">
+      <form className="pt-4 space-y-8">
         {/* Image */}
-        <div>
-          <Controller
-            name="imageUrl"
-            control={control}
-            rules={{ required: true }}
-            render={({ field, fieldState: { error } }) => (
-              <>
-                <ImageUpload
-                  options={{ maxFiles: 1 }}
-                  images={field.value ? [field.value] : []}
-                  disabled={loading}
-                  onUpload={(url) => {
-                    field.onChange(url);
-                  }}
-                  onRemove={(_) => field.onChange('')}
-                />
-                <p className="mt-2 text-error">{error?.message}</p>
-              </>
-            )}
-          />
-        </div>
+        <Controller
+          name="imageUrl"
+          control={control}
+          rules={{ required: true }}
+          render={({ field, fieldState: { error } }) => (
+            <>
+              <ImageUpload
+                options={{ maxFiles: 1 }}
+                images={field.value ? [field.value] : []}
+                disabled={loading}
+                onUpload={(url) => {
+                  field.onChange(url);
+                }}
+                onRemove={(_) => field.onChange('')}
+              />
+              <p className="mt-2 text-error">{error?.message}</p>
+            </>
+          )}
+        />
         {/* Name */}
-        <div className="form-control w-full mb-6">
-          <label className="label">
-            <span className="label-text">Name</span>
-          </label>
-          <input
+        <div className="form-control w-full">
+          <Input
             id="name"
             type="text"
+            label="Shop name"
+            parentClassName="max-w-none"
             placeholder="Your shop name here"
-            className={cls('input input-bordered w-full', {
-              'input-error': !!errors.name,
-            })}
+            error={errors.name?.message}
             disabled={loading}
             {...register('name')}
           />
-          {errors.name && (
-            <label className="label">
-              <span className="label-text-alt text-error font-medium">
-                {errors.name.message}
-              </span>
-            </label>
-          )}
         </div>
         {/* Featured */}
         <Checkbox

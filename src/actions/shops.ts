@@ -9,7 +9,10 @@ const getShop = async (shopId: number) => {
       return null;
     }
 
-    const shop = await prisma.shop.findUnique({ where: { id: shopId } });
+    const shop = await prisma.shop.findUnique({
+      where: { id: shopId },
+      include: { billboard: true },
+    });
 
     if (!shop || shop.userId != session.user.id) {
       return null;

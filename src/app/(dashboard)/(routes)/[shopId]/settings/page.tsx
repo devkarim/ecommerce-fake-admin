@@ -26,12 +26,13 @@ const ShopProperties: React.FC<ShopPropertiesProps> = async ({
         <Header title="Settings" subtitle="Manage your shop settings" />
       </Container>
       <Container className="border-b border-neutral">
-        <h3 className="text-xl lg:text-3xl font-medium">General</h3>
         <SettingsForm
           id={shop.id}
           name={shop.name}
           imageUrl={shop.imageUrl}
           isFeatured={shop.isFeatured}
+          billboardCaption={shop.billboard?.caption}
+          billboardImageUrl={shop.billboard?.imageUrl}
         />
       </Container>
       <DangerZone id={shop.id} />
