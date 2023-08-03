@@ -22,6 +22,7 @@ export async function GET(
   // Get shop by id
   const shop = await prisma.shop.findUnique({
     where: { id: shopId },
+    include: { billboard: true },
   });
   return NextResponse.json({ success: true, data: shop });
 }
