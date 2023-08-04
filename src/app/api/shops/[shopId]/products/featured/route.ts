@@ -19,12 +19,17 @@ export async function GET(
     );
   }
   // Get featured products based on shop
-  const products = await prisma.product.findMany({
-    where: { shopId, isFeatured: true },
-    skip: (page - 1) * 10,
-    take: 10,
-    orderBy: { updatedAt: 'desc' },
-    include: { props: true, images: true },
-  });
-  return NextResponse.json({ success: true, data: products });
+  const [products, count] = await prisma.$transaction([
+    prisma.product.findMany({
+      where: { shopId, isFeatured: true, isArchived: false },
+      skip: (page - 1) * 10,
+      take: 10,
+      orderBy: { updatedAt: 'desc' },
+      include: { props: true, images: true },
+    }),
+    prisma.product.count({
+      where: { shopId, isFeatured: true, isArchived: false },
+    }),
+  ]);
+  return NextResponse.json({ success: true, data: { products, count } });
 }

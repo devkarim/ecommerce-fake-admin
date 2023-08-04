@@ -1,4 +1,6 @@
 import { NextResponse } from 'next/server';
+import { DefaultArgs } from '@prisma/client/runtime/library';
+import { Prisma } from '@prisma/client';
 
 import getSession from '@/actions/getSession';
 import prisma from '@/lib/prisma';
@@ -30,7 +32,7 @@ export async function GET(
     );
   }
   // Get products based on shop
-  const products = await prisma.product.findMany({
+  const query: Prisma.ProductFindManyArgs<DefaultArgs> = {
     where: {
       shopId,
       isArchived: false,
@@ -57,9 +59,13 @@ export async function GET(
     skip: (page - 1) * 10,
     take: 10,
     orderBy: { updatedAt: 'desc' },
-    include: { props: true, images: true },
-  });
-  return NextResponse.json({ success: true, data: products });
+    include: { props: true, images: true, _count: true },
+  };
+  const [products, count] = await prisma.$transaction([
+    prisma.product.findMany(query),
+    prisma.product.count({ where: query.where }),
+  ]);
+  return NextResponse.json({ success: true, data: { products, count } });
 }
 
 export async function POST(
