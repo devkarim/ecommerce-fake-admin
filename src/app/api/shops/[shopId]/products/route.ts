@@ -33,6 +33,7 @@ export async function GET(
   const products = await prisma.product.findMany({
     where: {
       shopId,
+      isArchived: false,
       AND:
         Object.keys(propsParams).length != 0
           ? Object.keys(propsParams).map((k) => {
