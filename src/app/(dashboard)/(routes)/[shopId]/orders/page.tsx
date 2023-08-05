@@ -1,8 +1,8 @@
-import { redirect } from 'next/navigation';
-
-import getShop from '@/actions/shops';
 import Header from '@/components/ui/header';
 import Container from '@/components/ui/container';
+import { getOrdersByShopId } from '@/actions/orders';
+
+import OrdersList from './components/orders-list';
 
 interface ShopOrdersPageProps {
   params: {
@@ -13,9 +13,7 @@ interface ShopOrdersPageProps {
 const ShopOrdersPage: React.FC<ShopOrdersPageProps> = async ({
   params: { shopId },
 }) => {
-  const shop = await getShop(+shopId);
-
-  if (!shop) redirect('/');
+  const { orders, count } = await getOrdersByShopId(+shopId);
 
   return (
     <div>
@@ -24,6 +22,9 @@ const ShopOrdersPage: React.FC<ShopOrdersPageProps> = async ({
           title="Orders"
           subtitle="Real-time order insights, analytics, and summaries"
         />
+      </Container>
+      <Container>
+        <OrdersList orders={orders} numOfOrders={count} />
       </Container>
     </div>
   );
