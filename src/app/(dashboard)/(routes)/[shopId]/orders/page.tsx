@@ -8,12 +8,17 @@ interface ShopOrdersPageProps {
   params: {
     shopId: string;
   };
+  searchParams: {
+    q: string;
+    page: string;
+  };
 }
 
 const ShopOrdersPage: React.FC<ShopOrdersPageProps> = async ({
   params: { shopId },
+  searchParams: { page, q },
 }) => {
-  const { orders, count } = await getOrdersByShopId(+shopId);
+  const { orders, count } = await getOrdersByShopId(+shopId, q, +(page || 1));
 
   return (
     <div>

@@ -15,9 +15,3 @@ export type ProductFull = Prisma.ProductGetPayload<{
     props: { include: { property: true } };
   };
 }>;
-
-export type OrderWithCount = Prisma.OrderGetPayload<{
-  include: {
-    _count: { select: { items: true } };
-  };
-}>;

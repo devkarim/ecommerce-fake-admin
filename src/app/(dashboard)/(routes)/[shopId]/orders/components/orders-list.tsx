@@ -1,48 +1,80 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import qs from 'query-string';
 import { FaCheck } from 'react-icons/fa';
 import { FaXmark } from 'react-icons/fa6';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
-import { OrderWithCount } from '@/types/db';
+import { Order } from '@prisma/client';
 
 interface OrdersListProps {
-  orders: OrderWithCount[];
+  orders: Order[];
   numOfOrders?: number;
 }
 
 const OrdersList: React.FC<OrdersListProps> = ({ orders, numOfOrders }) => {
-  const [query, setQuery] = useState('');
-  const [filteredOrders, setFilteredOrders] =
-    useState<OrderWithCount[]>(orders);
-  const params = useSearchParams();
-  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const router = useRouter();
 
-  const page = +(params.get('page') ?? 1);
-  const numOfPages = Math.ceil((numOfOrders ?? 0) / 5);
+  const page = +(searchParams.get('page') ?? 1);
+  const numOfPages = Math.ceil((numOfOrders ?? 0) / 10);
 
-  useEffect(() => {
-    setFilteredOrders(orders);
-  }, [orders]);
+  const setQuery = (q: string) => {
+    const current = qs.parse(searchParams.toString());
+
+    const query = {
+      ...current,
+      q,
+    };
+
+    const url = qs.stringifyUrl(
+      {
+        url: window.location.href,
+        query,
+      },
+      { skipEmptyString: true }
+    );
+
+    router.push(url);
+    router.refresh();
+  };
+
+  const goPage = (page: number) => {
+    const current = qs.parse(searchParams.toString());
+
+    const query = {
+      ...current,
+      page,
+    };
+
+    const url = qs.stringifyUrl(
+      {
+        url: window.location.href,
+        query,
+      },
+      { skipEmptyString: true }
+    );
+
+    router.push(url);
+  };
 
   return (
     <div className="space-y-12">
       <input
         id="query"
         type="text"
-        value={query}
+        defaultValue={searchParams.get('q') ?? ''}
         placeholder="Search"
         className="input input-bordered w-full max-w-sm"
-        onChange={(e) => setQuery(e.target.value)}
+        onBlur={(e) => setQuery(e.target.value)}
       />
-      {filteredOrders.length != 0 ? (
+      {orders.length != 0 ? (
         <table className="overflow-x-auto table">
           {/* head */}
           <thead>
             <tr className="border-[1px] border-neutral">
-              <th>Name</th>
+              <th>First Name</th>
+              <th>Last Name</th>
               <th>Email</th>
               <th>Phone</th>
               <th>Invoice ID</th>
@@ -51,11 +83,10 @@ const OrdersList: React.FC<OrdersListProps> = ({ orders, numOfOrders }) => {
           </thead>
           {/* body */}
           <tbody>
-            {filteredOrders.map((o) => (
+            {orders.map((o) => (
               <tr key={o.id} className="border-[1px] border-neutral">
-                <td>
-                  {o.firstName} {o.lastName}
-                </td>
+                <td>{o.firstName}</td>
+                <td>{o.lastName}</td>
                 <td>{o.email}</td>
                 <td>{o.phone}</td>
                 <td>{o.invoiceId}</td>
@@ -75,10 +106,7 @@ const OrdersList: React.FC<OrdersListProps> = ({ orders, numOfOrders }) => {
         <button
           className="join-item btn"
           disabled={page <= 1}
-          onClick={() => {
-            router.push(pathname + `?page=${page - 1}`);
-            router.refresh();
-          }}
+          onClick={() => goPage(page - 1)}
         >
           «
         </button>
@@ -86,10 +114,7 @@ const OrdersList: React.FC<OrdersListProps> = ({ orders, numOfOrders }) => {
         <button
           className="join-item btn"
           disabled={page >= numOfPages}
-          onClick={() => {
-            router.push(pathname + `?page=${page + 1}`);
-            router.refresh();
-          }}
+          onClick={() => goPage(page + 1)}
         >
           »
         </button>
