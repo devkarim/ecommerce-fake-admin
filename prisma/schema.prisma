@@ -84,10 +84,10 @@ model Product {
   quantity   Int
   props      PropertyValue[]
   images     Image[]
-  orders     Order[]
   createdAt  DateTime        @default(now())
   updatedAt  DateTime        @updatedAt
   discount   Int             @default(0)
+  orderItems OrderItem[]
 }
 
 model Image {
@@ -99,13 +99,25 @@ model Image {
   updatedAt DateTime @updatedAt
 }
 
-model Order {
-  id        Int      @id @default(autoincrement())
-  isPaid    Boolean  @default(false)
-  phone     String   @default("")
-  address   String   @default("")
-  product   Product  @relation(fields: [productId], references: [id])
+model OrderItem {
+  id        Int     @id @default(autoincrement())
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId   Int
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+}
+
+model Order {
+  id         Int         @id @default(autoincrement())
+  firstName  String
+  lastName   String
+  email      String
+  invoiceId  Int         @unique
+  invoiceKey String
+  isPaid     Boolean     @default(false)
+  phone      String      @default("")
+  address    String      @default("")
+  items      OrderItem[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
 }
