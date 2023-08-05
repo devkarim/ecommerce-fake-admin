@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import checkout from '@/services/fawaterk';
 import { Customer } from '@/types/fawaterk';
+import { CheckoutSchema, checkoutSchema } from '@/schemas/checkoutSchema';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -17,19 +18,36 @@ export async function OPTIONS() {
 
 export async function POST(req: Request) {
   try {
-    const body: { productIds: number[] } = await req.json();
-    const parsed = z.number().array().min(1).safeParse(body.productIds);
-    // Check if at least one product is provided
-    if (!parsed.success) {
+    const body: CheckoutSchema = await req.json();
+    // Validate update schema
+    const validation = checkoutSchema.safeParse(body);
+    // If schema didn't pass validation
+    if (!validation.success) {
       return NextResponse.json(
+        { success: false, message: validation.error.errors[0].message },
         {
-          success: false,
-          message: 'At least one product must be provided.',
-        },
-        { status: 400 }
+          status: 400,
+        }
       );
     }
-    const productIds = parsed.data;
+    // Extract all data
+    const {
+      first_name,
+      last_name,
+      email,
+      phone,
+      address_line_1,
+      address_line_2,
+      city,
+      country,
+      zip,
+      productIds,
+    } = body;
+    // Format address to a readable string
+    const address = `${address_line_1}${
+      address_line_2 ? ', ' + address_line_2 : ''
+    }, ${city}, ${country}, ${zip}`;
+    // Get products from database
     const products = await prisma.product.findMany({
       where: {
         id: {
@@ -37,16 +55,15 @@ export async function POST(req: Request) {
         },
       },
     });
-    const customer: Customer = {
-      first_name: 'John',
-      last_name: 'Doe',
-      email: 'johndoe@email.com',
-      phone: 0,
-      address: '3360 University Street, Seattle, WA',
-    };
     // Checkout using Fawaterk
     const response = await checkout(
-      customer,
+      {
+        first_name,
+        last_name,
+        email,
+        phone,
+        address,
+      },
       products.map((p) => ({ name: p.name, price: +p.price, quantity: 1 })),
       products.reduce((acc, curr) => acc + +curr.price, 0)
     );
@@ -54,11 +71,11 @@ export async function POST(req: Request) {
     // Create order in database
     await prisma.order.create({
       data: {
-        email: customer.email,
-        firstName: customer.first_name,
-        lastName: customer.last_name,
-        phone: customer.phone.toString(),
-        address: customer.address,
+        email: email,
+        firstName: first_name,
+        lastName: last_name,
+        phone: phone.toString(),
+        address: address,
         invoiceId,
         invoiceKey,
         items: {
