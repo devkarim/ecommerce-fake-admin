@@ -1,11 +1,12 @@
 'use client';
 
+import qs from 'query-string';
 import { useEffect, useState } from 'react';
 import { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import { FaCheck } from 'react-icons/fa';
 import { FaXmark } from 'react-icons/fa6';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { Product } from '@prisma/client';
 
@@ -21,14 +22,12 @@ const ProductsList: React.FC<ProductsListProps> = ({
   products,
   numOfProducts,
 }) => {
-  const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
-  const params = useSearchParams();
-  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const router = useRouter();
 
-  const page = +(params.get('page') ?? 1);
+  const page = +(searchParams.get('page') ?? 1);
   const numOfPages = Math.ceil((numOfProducts ?? 0) / 5);
 
   const onDelete = async (shopId: number, productId: number) => {
@@ -48,6 +47,45 @@ const ProductsList: React.FC<ProductsListProps> = ({
     }
   };
 
+  const setQuery = (q: string) => {
+    const current = qs.parse(searchParams.toString());
+
+    const query = {
+      ...current,
+      q,
+    };
+
+    const url = qs.stringifyUrl(
+      {
+        url: window.location.href,
+        query,
+      },
+      { skipEmptyString: true }
+    );
+
+    router.push(url);
+    router.refresh();
+  };
+
+  const goPage = (page: number) => {
+    const current = qs.parse(searchParams.toString());
+
+    const query = {
+      ...current,
+      page,
+    };
+
+    const url = qs.stringifyUrl(
+      {
+        url: window.location.href,
+        query,
+      },
+      { skipEmptyString: true }
+    );
+
+    router.push(url);
+  };
+
   useEffect(() => {
     setFilteredProducts(products);
   }, [products]);
@@ -57,7 +95,6 @@ const ProductsList: React.FC<ProductsListProps> = ({
       <input
         id="query"
         type="text"
-        value={query}
         placeholder="Search"
         className="input input-bordered w-full max-w-sm"
         onChange={(e) => setQuery(e.target.value)}
@@ -107,10 +144,7 @@ const ProductsList: React.FC<ProductsListProps> = ({
         <button
           className="join-item btn"
           disabled={page <= 1}
-          onClick={() => {
-            router.push(pathname + `?page=${page - 1}`);
-            router.refresh();
-          }}
+          onClick={() => goPage(page - 1)}
         >
           «
         </button>
@@ -118,10 +152,7 @@ const ProductsList: React.FC<ProductsListProps> = ({
         <button
           className="join-item btn"
           disabled={page >= numOfPages}
-          onClick={() => {
-            router.push(pathname + `?page=${page + 1}`);
-            router.refresh();
-          }}
+          onClick={() => goPage(page + 1)}
         >
           »
         </button>

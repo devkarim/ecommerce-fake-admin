@@ -12,6 +12,7 @@ interface ShopProductsPageProps {
     shopId: string;
   };
   searchParams: {
+    q: string;
     page: string;
   };
 }
@@ -20,9 +21,9 @@ export const revalidate = 0;
 
 const ShopProductsPage: React.FC<ShopProductsPageProps> = async ({
   params: { shopId },
-  searchParams: { page },
+  searchParams: { page, q },
 }) => {
-  const shop = await getShopWithProducts(+shopId, +page);
+  const shop = await getShopWithProducts(+shopId, q, +page);
 
   if (!shop) redirect('/');
 

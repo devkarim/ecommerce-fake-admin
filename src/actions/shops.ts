@@ -49,6 +49,7 @@ export const getShopWithProps = async (shopId: number) => {
 
 export const getShopWithProducts = async (
   shopId: number,
+  q: string,
   page: number,
   take: number = 5
 ) => {
@@ -66,6 +67,18 @@ export const getShopWithProducts = async (
           select: { products: true },
         },
         products: {
+          where: {
+            OR: q
+              ? [
+                  {
+                    name: {
+                      contains: q,
+                      mode: 'insensitive',
+                    },
+                  },
+                ]
+              : undefined,
+          },
           skip: take * ((page || 1) - 1),
           take,
           orderBy: { updatedAt: 'desc' },
