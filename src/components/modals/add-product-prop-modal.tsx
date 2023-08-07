@@ -17,7 +17,7 @@ import Select from '../ui/select';
 interface AddProductPropertyModalProps {
   isOpen?: boolean;
   onAdd: (values: AddProductPropertySchema) => void;
-  onClose?: () => void;
+  onClose: () => void;
   disabled?: boolean;
   props: Property[];
 }
@@ -78,6 +78,7 @@ const AddProductPropertyModal: React.FC<AddProductPropertyModalProps> = ({
       onPrimaryAction={handleSubmit(onAdd)}
       secondaryActionLabel="Close"
       onSecondaryAction={onClose}
+      onClose={onClose}
       disabled={disabled}
       className="max-w-2xl"
     >

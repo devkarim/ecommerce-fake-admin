@@ -76,6 +76,7 @@ const CreateShopModal: React.FC<CreateShopModalProps> = ({}) => {
       onPrimaryAction={handleSubmit(onCreate)}
       secondaryActionLabel="Close"
       onSecondaryAction={onClose}
+      onClose={onClose}
       disabled={loading}
     >
       <form className="pt-4 space-y-8">

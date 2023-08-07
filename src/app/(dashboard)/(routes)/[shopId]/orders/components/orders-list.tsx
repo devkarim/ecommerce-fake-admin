@@ -98,8 +98,6 @@ const OrdersList: React.FC<OrdersListProps> = ({ orders, numOfOrders }) => {
       ) : (
         <p className="text-center opacity-60 py-12">
           No orders found. <br />
-          {orders.length == 0 &&
-            'Create one by using the "Add new" button above.'}
         </p>
       )}
       <div className="join flex justify-center">

@@ -42,7 +42,8 @@ const DangerZone: React.FC<DangerZoneProps> = ({ id }) => {
       <div className="space-y-1">
         <p className="lg:text-xl font-semibold">Delete this shop</p>
         <p className="text-sm lg:text-base opacity-60">
-          By deleting this shop, you will lose everything including shop’s
+          Before deleting, make sure you have no products in your shop. By
+          deleting this shop, you will lose everything including shop’s
           products, properties, and orders.
         </p>
       </div>
