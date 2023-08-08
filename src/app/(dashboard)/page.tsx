@@ -16,7 +16,7 @@ export default async function Home() {
           className="hidden sm:inline-block"
         />
         <ShopDropdown
-          shops={[]}
+          shops={user?.shops || []}
           variant="sm"
           className="inline-block sm:hidden"
         />

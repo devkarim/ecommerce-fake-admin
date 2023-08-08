@@ -114,7 +114,6 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
                 toast.success('Copied to clipboard');
                 navigator.clipboard.writeText(`${FRONTEND_URL}/shop/${id}`);
               }}
-              right={<FaCopy className="cursor-pointer text-lg h-full" />}
             />
           </div>
           <h3 className="text-xl lg:text-3xl font-medium">General</h3>

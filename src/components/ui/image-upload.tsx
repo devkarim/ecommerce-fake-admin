@@ -28,7 +28,8 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
             key={url}
             className="relative w-[200px] h-[200px] rounded-md overflow-hidden"
           >
-            <div className="z-10 absolute top-2 right-2">
+            <Image fill className="object-cover" alt="Image" src={url} />
+            <div className="absolute top-2 right-2">
               <button
                 className="btn"
                 type="button"
@@ -38,7 +39,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                 <FaTrash />
               </button>
             </div>
-            <Image fill className="object-cover" alt="Image" src={url} />
           </div>
         ))}
       </div>

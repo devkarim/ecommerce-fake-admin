@@ -6,7 +6,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import { cls } from '@/lib/utils';
 
 interface ModalProps {
-  title: string;
+  title?: string;
   subtitle?: string;
   isOpen?: boolean;
   onClose: () => void;
@@ -68,7 +68,9 @@ const Modal: React.FC<ModalProps> = ({
             >
               <div className="card-body space-y-8">
                 <div className="space-y-1">
-                  <h2 className="card-title text-xl lg:text-2xl">{title}</h2>
+                  {title && (
+                    <h2 className="card-title text-xl lg:text-2xl">{title}</h2>
+                  )}
                   {subtitle && (
                     <p className="text-sm text-base-content/50">{subtitle}</p>
                   )}
