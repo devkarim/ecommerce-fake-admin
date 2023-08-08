@@ -35,10 +35,7 @@ const RevenueBarChart: React.FC<RevenueBarChartProps> = ({ data }) => {
         {data.length == 0 ? (
           <p className="text-center opacity-60">No data found.</p>
         ) : (
-          <ResponsiveContainer
-            height={450}
-            className="items-center justify-center"
-          >
+          <ResponsiveContainer height={450}>
             <BarChart data={data}>
               <XAxis
                 dataKey="name"
@@ -55,7 +52,7 @@ const RevenueBarChart: React.FC<RevenueBarChartProps> = ({ data }) => {
               <Tooltip
                 formatter={(value) => currencyFormatter.format(+value || 0)}
               />
-              <Bar dataKey="revenue" fill="#BE4B92" radius={[8, 8, 8, 8]} />
+              <Bar dataKey="revenue" fill="#BE4B92" radius={8} />
             </BarChart>
           </ResponsiveContainer>
         )}
