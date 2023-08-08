@@ -27,6 +27,12 @@ export const createProductSchema = z.object({
       invalid_type_error: 'Quantity is required.',
     })
     .min(1, 'Quantity must be at least 1.'),
+  discount: z
+    .number({
+      invalid_type_error: 'Discount must be a number.',
+    })
+    .default(0)
+    .optional(),
   isArchived: z.boolean().optional().default(false),
   isFeatured: z.boolean().optional().default(false),
   images: z

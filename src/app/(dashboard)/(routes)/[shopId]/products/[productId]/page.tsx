@@ -49,6 +49,7 @@ const EditProductPage: React.FC<EditProductPageProps> = async ({
           })}
           productId={product.id}
           images={product.images.map((img) => img.url)}
+          discount={product.discount}
         />
       </Container>
     </>

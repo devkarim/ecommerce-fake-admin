@@ -75,8 +75,16 @@ export async function POST(
   try {
     const session = await getSession();
     const body: CreateProductSchema = await req.json();
-    const { name, price, quantity, isArchived, isFeatured, images, props } =
-      body;
+    const {
+      name,
+      price,
+      quantity,
+      discount,
+      isArchived,
+      isFeatured,
+      images,
+      props,
+    } = body;
 
     const shopId = +params.shopId;
 
@@ -137,6 +145,7 @@ export async function POST(
         name,
         price,
         quantity,
+        discount,
         images: {
           createMany: {
             data: images.map((url) => {

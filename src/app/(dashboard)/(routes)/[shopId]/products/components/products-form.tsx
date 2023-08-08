@@ -33,6 +33,7 @@ interface ProductsFormProps {
   isFeatured?: boolean;
   price?: number;
   quantity?: number;
+  discount?: number;
   images?: string[];
   props?: PropValues;
   shopProps: Property[];
@@ -46,6 +47,7 @@ const ProductsForm: React.FC<ProductsFormProps> = ({
   isFeatured = false,
   price = 0,
   quantity = 0,
+  discount = 0,
   images = [],
   mode = 'Create',
   props,
@@ -74,6 +76,7 @@ const ProductsForm: React.FC<ProductsFormProps> = ({
       quantity,
       images,
       props,
+      discount,
     },
   });
 
@@ -182,6 +185,15 @@ const ProductsForm: React.FC<ProductsFormProps> = ({
               disabled={loading}
               error={errors.quantity?.message}
               {...register('quantity', { valueAsNumber: true })}
+            />
+            <Input
+              id="discount"
+              type="number"
+              label="Discount"
+              placeholder="Your product discount here"
+              disabled={loading}
+              error={errors.discount?.message}
+              {...register('discount', { valueAsNumber: true })}
             />
           </div>
           {/* Archived & Featured */}

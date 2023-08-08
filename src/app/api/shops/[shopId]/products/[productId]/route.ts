@@ -49,8 +49,16 @@ export async function PATCH(
   try {
     const session = await getSession();
     const body: CreateProductSchema = await req.json();
-    const { name, price, quantity, isArchived, isFeatured, images, props } =
-      body;
+    const {
+      name,
+      price,
+      quantity,
+      discount,
+      isArchived,
+      isFeatured,
+      images,
+      props,
+    } = body;
 
     const shopId = +params.shopId;
     const productId = +params.productId;
@@ -124,6 +132,7 @@ export async function PATCH(
         name,
         price,
         quantity,
+        discount,
         images: {
           deleteMany: {},
         },
