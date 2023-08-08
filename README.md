@@ -1,4 +1,4 @@
-# Store
+# Store - Admin Dashboard
 
 ## Overview
 
