@@ -14,6 +14,7 @@ export async function GET(req: Request) {
       id: {
         in: productIds,
       },
+      isArchived: false,
     },
     select: {
       price: true,

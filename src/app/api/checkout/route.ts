@@ -53,6 +53,7 @@ export async function POST(req: Request) {
         id: {
           in: productIds,
         },
+        isArchived: false,
       },
     });
     // Checkout using Fawaterk
