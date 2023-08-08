@@ -13,6 +13,8 @@ import Checkbox from '@/components/ui/checkbox';
 import ImageUpload from '@/components/ui/image-upload';
 import { updateShopSchema, UpdateShopSchema } from '@/schemas/shopSchema';
 import Input from '@/components/ui/input';
+import { FRONTEND_URL } from '@/config/constants';
+import { FaCopy } from 'react-icons/fa';
 
 interface SettingsFormProps {
   id: number;
@@ -89,6 +91,32 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
     <form className="pt-4" onSubmit={handleSubmit(onSubmit)}>
       <div className="form-control max-w-md">
         <div className="flex flex-col space-y-8">
+          <h3 className="text-xl lg:text-3xl font-medium">Shop Information</h3>
+          <div className="flex flex-wrap lg:flex-nowrap gap-4">
+            <Input
+              id="shopId"
+              type="text"
+              label="Shop ID"
+              className="w-96 cursor-pointer input-disabled"
+              onClick={() => {
+                toast.success('Copied to clipboard');
+                navigator.clipboard.writeText(id.toString());
+              }}
+              value={id}
+            />
+            <Input
+              id="url"
+              type="text"
+              label="Shop URL"
+              value={`${FRONTEND_URL}/shop/${id}`}
+              className="w-96 cursor-pointer input-disabled"
+              onClick={() => {
+                toast.success('Copied to clipboard');
+                navigator.clipboard.writeText(`${FRONTEND_URL}/shop/${id}`);
+              }}
+              right={<FaCopy className="cursor-pointer text-lg h-full" />}
+            />
+          </div>
           <h3 className="text-xl lg:text-3xl font-medium">General</h3>
           <Controller
             name="imageUrl"
