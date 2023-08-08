@@ -79,11 +79,11 @@ Use one of the following commands to install the packages:
 These environment variables are required for the app to work:
 
 ```
-DATABASE_URL=""
-SHADOW_DATABASE_URL=""
+DATABASE_URL=
+SHADOW_DATABASE_URL=
 
-GITHUB_CLIENT_ID=""
-GITHUB_CLIENT_SECRET=""
+GITHUB_CLIENT_ID=
+GITHUB_CLIENT_SECRET=
 
 NEXTAUTH_SECRET=
 NEXTAUTH_URL=http://localhost:3001
