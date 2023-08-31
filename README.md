@@ -96,6 +96,12 @@ NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=
 FAWATERK_API_KEY=
 ```
 
+### Push changes to database and generate PrismaClient
+
+Use this to push and generate PrismaClient:
+
+`npx prisma db push`
+
 ### Start development server
 
 Use one of the following commands to start the development server:
