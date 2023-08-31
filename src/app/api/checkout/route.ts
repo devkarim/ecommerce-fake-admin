@@ -1,9 +1,7 @@
-import { z } from 'zod';
 import { NextResponse } from 'next/server';
 
 import prisma from '@/lib/prisma';
 import checkout from '@/services/fawaterk';
-import { Customer } from '@/types/fawaterk';
 import { CheckoutSchema, checkoutSchema } from '@/schemas/checkoutSchema';
 
 const corsHeaders = {
